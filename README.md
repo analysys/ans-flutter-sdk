@@ -1,6 +1,9 @@
-# argo_flutter_plugin
+# Analysys Flutter SDK
 
-Argo Flutter plugin.
+========
+
+This is the official Flutter SDK for Analysys.
+
 
 ## Getting Started
 
@@ -12,3 +15,7 @@ Android and/or iOS.
 For help getting started with Flutter, view our 
 [online documentation](https://flutter.dev/docs), which offers tutorials, 
 samples, guidance on mobile development, and a full API reference.
+
+## License
+
+[gpl-3.0](https://www.gnu.org/licenses/gpl-3.0.txt)
