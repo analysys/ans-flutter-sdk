@@ -19,3 +19,10 @@ samples, guidance on mobile development, and a full API reference.
 ## License
 
 [gpl-3.0](https://www.gnu.org/licenses/gpl-3.0.txt)
+
+
+## 鸣谢
+
+该版本SDK来源于社区小伙伴贡献.
+
+ * [qshbbcs](https://github.com/qshbbcs/argo-sdk-flutter)
