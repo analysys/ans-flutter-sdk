@@ -3,17 +3,18 @@ package com.analysys.argo.argo_flutter_plugin;
 import android.content.Context;
 import android.util.Log;
 
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
-import  com.analysys.AnalysysAgent;
+import com.analysys.AnalysysAgent;
 import com.analysys.AnalysysConfig;
 import com.analysys.EncryptEnum;
 
 import java.util.List;
 import java.util.Map;
+
+import io.flutter.plugin.common.MethodCall;
+import io.flutter.plugin.common.MethodChannel;
+import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
+import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.PluginRegistry.Registrar;
 
 /** ArgoFlutterPlugin */
 public class ArgoFlutterPlugin implements MethodCallHandler {
@@ -130,29 +131,46 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
     }
   }
 
-  private void init (Context context,Object params) {
-    Log.d(TAG, "init method call from java");
-    if (!isValidateMap(params)) {
-      Log.e(TAG,"init arguments error!!!");
-      return;
+    private void init(Context context, Object params) {
+        Log.d(TAG, "init method call from java");
+        if (!isValidateMap(params)) {
+            Log.e(TAG, "init arguments error!!!");
+            return;
+        }
+        Map mapParams = (Map) params;
+        AnalysysConfig config = null;
+        if (mapParams.size() != 0) {
+            config = new AnalysysConfig();
+            if (isStringType(mapParams.get("channel"))) {
+                config.setChannel((String) mapParams.get("channel"));
+            }
+            if (isStringType(mapParams.get("base_url"))) {
+                config.setBaseUrl((String) mapParams.get("base_url"));
+            }
+            if (isStringType(mapParams.get("app_key"))) {
+                config.setAppKey((String) mapParams.get("app_key"));
+            }
+            if (isBooleanType(mapParams.get("auto_profile"))) {
+                config.setAutoProfile((boolean) mapParams.get("auto_profile"));
+            }
+            if (isIntegerType(mapParams.get("encryptType"))) {
+                int encryptType = (int) mapParams.get("encryptType");
+                for (EncryptEnum anEnum : EncryptEnum.values()) {
+                    if (anEnum.getType() == encryptType) {
+                        config.setEncryptType(anEnum);
+                        break;
+                    }
+                }
+            }
+            if (isBooleanType(mapParams.get("auto_heatMap"))) {
+                config.setAutoHeatMap((boolean) mapParams.get("auto_heatMap"));
+            }
+            if (isBooleanType(mapParams.get("autoInstallation"))) {
+                config.setAutoInstallation((boolean) mapParams.get("autoInstallation"));
+            }
+        }
+        AnalysysAgent.init(context, config);
     }
-    Map mapParams = (Map)params;
-    AnalysysConfig config = new AnalysysConfig();
-    if (isStringType(mapParams.get("channel"))) {
-      config.setChannel((String) mapParams.get("channel"));
-    }
-    if (isStringType(mapParams.get("base_url"))) {
-      config.setBaseUrl((String)mapParams.get("base_url"));
-    }
-    if (isStringType(mapParams.get("app_key"))) {
-      config.setAppKey((String)mapParams.get("app_key"));
-      Log.d(TAG, "appkey:"+ mapParams.get("app_key"));
-    }
-    config.setAutoProfile(false);
-    config.setEncryptType(EncryptEnum.EMPTY);
-    AnalysysAgent.init(context,config);
-    AnalysysAgent.setAutoHeatMap (false);
-  }
 
   private void setDebugMode(Context context,Object params) {
     Log.d(TAG, "setDebugMode method call from java");
