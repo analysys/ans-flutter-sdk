@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:argo_flutter_plugin/argo_flutter_plugin.dart';
+import 'package:argo_flutter_plugin/AnalysysAgent.dart';
+import 'package:argo_flutter_plugin/AnalysysConfig.dart';
 
 void main() => runApp(App());
 
@@ -72,7 +73,10 @@ class _MyAppState extends State<MyApp> {
   void _initMethod(TextEditingController controller) {
     try {
       _showDialog("appkey:" + controller.text + "\n channelid:wandoujia");
-      ArgoFlutterPlugin.init(controller.text, "wandoujia");
+      AnalysysConfig config =new AnalysysConfig();
+      config.appKey = controller.text;
+      config.channel = "wandoujia";
+      AnalysysAgent.init(config);
     } catch (e) {
       print("_initMethod error with exception:" + e.toString());
     }
@@ -81,7 +85,7 @@ class _MyAppState extends State<MyApp> {
   void _setDebugMode(TextEditingController controller) {
     try {
       _showDialog("debugMode:" + controller.text);
-      ArgoFlutterPlugin.setDebugMode(int.parse(controller.text));
+      AnalysysAgent.setDebugMode(int.parse(controller.text));
     } catch (e) {
       print("setDebugMode error with exception:" + e.toString());
     }
@@ -90,7 +94,7 @@ class _MyAppState extends State<MyApp> {
   void _setUploadUrl(TextEditingController controller) {
     try {
       _showDialog("upload url:" + controller.text);
-      ArgoFlutterPlugin.setUploadUrl(controller.text);
+      AnalysysAgent.setUploadUrl(controller.text);
     } catch (e) {
       print("setUploadUrl error with exception:" + e.toString());
     }
@@ -99,7 +103,7 @@ class _MyAppState extends State<MyApp> {
   void _setIntervalTime(TextEditingController controller) {
     try {
       _showDialog("time interval: " + controller.text);
-      ArgoFlutterPlugin.setIntervalTime(int.parse(controller.text));
+      AnalysysAgent.setIntervalTime(int.parse(controller.text));
     } catch (e) {
       print("setIntervalTime error with exception:" + e.toString());
     }
@@ -108,7 +112,7 @@ class _MyAppState extends State<MyApp> {
   void _setMaxCacheSize(TextEditingController controller) {
     try {
       _showDialog("max cache size: " + controller.text);
-      ArgoFlutterPlugin.setMaxCacheSize(int.parse(controller.text));
+      AnalysysAgent.setMaxCacheSize(int.parse(controller.text));
     } catch (e) {
       print("setMaxCacheSize error with exception:" + e.toString());
     }
@@ -116,7 +120,7 @@ class _MyAppState extends State<MyApp> {
 
   void _getMaxCacheSize(TextEditingController controller) {
     try {
-      ArgoFlutterPlugin.getMaxCacheSize().then((val) {
+      AnalysysAgent.getMaxCacheSize().then((val) {
         _showDialog("max cache size: " + val.toString());
       });
     } catch (e) {
@@ -127,7 +131,7 @@ class _MyAppState extends State<MyApp> {
   void _setMaxEventSize(TextEditingController controller) {
     try {
       _showDialog(",max event size: " + controller.text);
-      ArgoFlutterPlugin.setMaxEventSize(int.parse(controller.text));
+      AnalysysAgent.setMaxEventSize(int.parse(controller.text));
     } catch (e) {
       print("_setMaxEventSize error with exception:" + e.toString());
     }
@@ -136,7 +140,7 @@ class _MyAppState extends State<MyApp> {
   void _flush(TextEditingController controller) {
     try {
       _showDialog("flush " + controller.text);
-      ArgoFlutterPlugin.flush();
+      AnalysysAgent.flush();
     } catch (e) {
       print("flush error with exception:" + e.toString());
     }
@@ -145,7 +149,7 @@ class _MyAppState extends State<MyApp> {
   void _alias(TextEditingController controller, {TextEditingController controller2}) {
     try {
       _showDialog("aliasId " + controller.text + "  originalId:" + controller2.text);
-      ArgoFlutterPlugin.alias(controller.text, controller2.text);
+      AnalysysAgent.alias(controller.text, controller2.text);
     } catch (e) {
       print("alias error with exception:" + e.toString());
     }
@@ -154,7 +158,7 @@ class _MyAppState extends State<MyApp> {
   void _identify(TextEditingController controller) {
     try {
       _showDialog("distinctId: " + controller.text);
-      ArgoFlutterPlugin.identify(controller.text);
+      AnalysysAgent.identify(controller.text);
     } catch (e) {
       print("identify error with exception:" + e.toString());
     }
@@ -162,7 +166,7 @@ class _MyAppState extends State<MyApp> {
 
   void _getDistinctId(TextEditingController controller) {
     try {
-      ArgoFlutterPlugin.getDistinctId().then((val) {
+      AnalysysAgent.getDistinctId().then((val) {
         _showDialog("max cache size: " + val.toString());
       });
     } catch (e) {
@@ -173,7 +177,7 @@ class _MyAppState extends State<MyApp> {
   void _reset(TextEditingController controller) {
     try {
       _showDialog("reset ");
-      ArgoFlutterPlugin.reset();
+      AnalysysAgent.reset();
     } catch (e) {
       print("reset error with exception:" + e.toString());
     }
@@ -182,7 +186,7 @@ class _MyAppState extends State<MyApp> {
   void _track(TextEditingController controller, {TextEditingController controller2}) {
     try {
       _showDialog("track eventName:" + controller.text + "eventInfo:" + controller2.text);
-      ArgoFlutterPlugin.track(controller.text, eventInfo: json.decode(controller2.text));
+      AnalysysAgent.track(controller.text, eventInfo: json.decode(controller2.text));
     } catch (e) {
       print("track error with exception:" + e.toString());
     }
@@ -191,7 +195,7 @@ class _MyAppState extends State<MyApp> {
   void _pageView(TextEditingController controller, {TextEditingController controller2}) {
     try {
       _showDialog("pageView pageName:" + controller.text + "pageInfo:" + controller2.text);
-      ArgoFlutterPlugin.pageView(controller.text, pageInfo: json.decode(controller2.text));
+      AnalysysAgent.pageView(controller.text, pageInfo: json.decode(controller2.text));
     } catch (e) {
       print("pageView error with exception:" + e.toString());
     }
@@ -200,7 +204,7 @@ class _MyAppState extends State<MyApp> {
   void _registerSuperProperty(TextEditingController controller, {TextEditingController controller2}) {
     try {
       _showDialog("registerSuperProperty propertyName:" + controller.text + "propertyValue:" + controller2.text);
-      ArgoFlutterPlugin.registerSuperProperty(controller.text, controller2.text);
+      AnalysysAgent.registerSuperProperty(controller.text, controller2.text);
     } catch (e) {
       print("registerSuperProperty error with exception:" + e.toString());
     }
@@ -209,7 +213,7 @@ class _MyAppState extends State<MyApp> {
   void _registerSuperProperties(TextEditingController controller) {
     try {
       _showDialog("registerSuperProperty propertyInfo:" + controller.text);
-      ArgoFlutterPlugin.registerSuperProperties(json.decode(controller.text));
+      AnalysysAgent.registerSuperProperties(json.decode(controller.text));
     } catch (e) {
       print("registerSuperProperties error with exception:" + e.toString());
     }
@@ -218,7 +222,7 @@ class _MyAppState extends State<MyApp> {
   void _unRegisterSuperProperty(TextEditingController controller) {
     try {
       _showDialog("unRegisterSuperProperty propertyName:" + controller.text);
-      ArgoFlutterPlugin.unRegisterSuperProperty(controller.text);
+      AnalysysAgent.unRegisterSuperProperty(controller.text);
     } catch (e) {
       print("unRegisterSuperProperty error with exception:" + e.toString());
     }
@@ -227,7 +231,7 @@ class _MyAppState extends State<MyApp> {
   void _clearSuperProperties(TextEditingController controller) {
     try {
       _showDialog("clearSuperProperties propertyName");
-      ArgoFlutterPlugin.clearSuperProperties();
+      AnalysysAgent.clearSuperProperties();
     } catch (e) {
       print("clearSuperProperties error with exception:" + e.toString());
     }
@@ -235,7 +239,7 @@ class _MyAppState extends State<MyApp> {
 
   void _getSuperProperty(TextEditingController controller) {
     try {
-      ArgoFlutterPlugin.getSuperProperty(controller.text).then((val) {
+      AnalysysAgent.getSuperProperty(controller.text).then((val) {
         _showDialog("getSuperProperty propertyName" + controller.text + " value:" + val.toString());
       });
     } catch (e) {
@@ -245,7 +249,7 @@ class _MyAppState extends State<MyApp> {
 
   void _getSuperProperties(TextEditingController controller) {
     try {
-      ArgoFlutterPlugin.getSuperProperties().then((val) {
+      AnalysysAgent.getSuperProperties().then((val) {
         _showDialog("getSuperProperty propertyName" + controller.text + " value:" + val.toString());
       });
     } catch (e) {
@@ -256,7 +260,7 @@ class _MyAppState extends State<MyApp> {
   void _profileSet(TextEditingController controller) {
     try {
       _showDialog("profileSet propertyInfo:" + controller.text);
-      ArgoFlutterPlugin.profileSet(json.decode(controller.text));
+      AnalysysAgent.profileSet(json.decode(controller.text));
     } catch (e) {
       print("profileSet error with exception:" + e.toString());
     }
@@ -265,7 +269,7 @@ class _MyAppState extends State<MyApp> {
   void _profileSetOnce(TextEditingController controller) {
     try {
       _showDialog("profileSetOnce propertyInfo:" + controller.text);
-      ArgoFlutterPlugin.profileSetOnce(json.decode(controller.text));
+      AnalysysAgent.profileSetOnce(json.decode(controller.text));
     } catch (e) {
       print("profileSetOnce error with exception:" + e.toString());
     }
@@ -274,7 +278,7 @@ class _MyAppState extends State<MyApp> {
   void _profileIncrement(TextEditingController controller) {
     try {
       _showDialog("profileIncrement propertyInfo:" + controller.text);
-      ArgoFlutterPlugin.profileIncrement(json.decode(controller.text));
+      AnalysysAgent.profileIncrement(json.decode(controller.text));
     } catch (e) {
       print("profileIncrement error with exception:" + e.toString());
     }
@@ -283,7 +287,7 @@ class _MyAppState extends State<MyApp> {
   void _profileAppend(TextEditingController controller) {
     try {
       _showDialog("profileIncrement propertyInfo:" + controller.text);
-      ArgoFlutterPlugin.profileAppend(json.decode(controller.text));
+      AnalysysAgent.profileAppend(json.decode(controller.text));
     } catch (e) {
       print("profileAppend error with exception:" + e.toString());
     }
@@ -292,7 +296,7 @@ class _MyAppState extends State<MyApp> {
   void _profileUnset(TextEditingController controller) {
     try {
       _showDialog("profileUnset propertyName:" + controller.text);
-      ArgoFlutterPlugin.profileUnset(controller.text);
+      AnalysysAgent.profileUnset(controller.text);
     } catch (e) {
       print("profileUnset error with exception:" + e.toString());
     }
@@ -301,7 +305,7 @@ class _MyAppState extends State<MyApp> {
   void _profileDelete(TextEditingController controller) {
     try {
       _showDialog("profileDelete");
-      ArgoFlutterPlugin.profileDelete();
+      AnalysysAgent.profileDelete();
     } catch (e) {
       print("profileDelete error with exception:" + e.toString());
     }
@@ -310,7 +314,7 @@ class _MyAppState extends State<MyApp> {
   void _trackCampaign(TextEditingController controller, {TextEditingController controller2}) {
     try {
       _showDialog("trackCampaign:" + controller.text + "  isClicked:" + controller2.text);
-      ArgoFlutterPlugin.trackCampaign(controller.text, int.tryParse(controller2.text) > 0 ? true : false);
+      AnalysysAgent.trackCampaign(controller.text, int.tryParse(controller2.text) > 0 ? true : false);
     } catch (e) {
       print("trackCampaign error with exception:" + e.toString());
     }
