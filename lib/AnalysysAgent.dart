@@ -23,6 +23,42 @@ class AnalysysAgent {
     }
   }
 
+  ///   不允许上传 0
+  ///   允许移动网络上传 1 << 1
+  ///   允许wifi网络  1 << 2
+  ///   允许所有网络 0xFF;
+  static void setUploadNetworkType(int type) {
+    try {
+      _channel.invokeMethod('setUploadNetworkType', type);
+    } catch (e) {
+      print("setUploadNetworkType error with exception:" + e.toString());
+    }
+  }
+
+  static void reportException(String exception) {
+    try {
+      _channel.invokeMethod('reportException', exception);
+    } catch (e) {
+      print("reportException error with exception:" + e.toString());
+    }
+  }
+
+  static void cleanDBCache() {
+    try {
+      _channel.invokeMethod('cleanDBCache');
+    } catch (e) {
+      print("cleanDBCache error with exception:" + e.toString());
+    }
+  }
+
+  static Map<String, Object> getPresetProperties() {
+    try {
+      _channel.invokeMethod('getPresetProperties');
+    } catch (e) {
+      print("setDebugMode error with exception:" + e.toString());
+    }
+  }
+
   static void setUploadUrl(String url) {
     try {
       _channel.invokeMethod('set_upload_url', url);
@@ -131,6 +167,19 @@ class AnalysysAgent {
         params['page_detail'] = pageInfo;
       }
       _channel.invokeMethod('pageview', params);
+    } catch (e) {
+      print("pageView error with exception:" + e.toString());
+    }
+  }
+
+  /// 应用启动来源，
+  /// 参数为 1. icon启动 默认值为icon启动
+  /// 参数为 2. msg 启动
+  /// 参数为 3. deepLink启动
+  /// 参数为 5. 其他方式启动
+  static void launchSource(int source) {
+    try {
+      _channel.invokeMethod('launchSource', source);
     } catch (e) {
       print("pageView error with exception:" + e.toString());
     }

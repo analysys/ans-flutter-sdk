@@ -7,6 +7,9 @@ import com.analysys.AnalysysAgent;
 import com.analysys.AnalysysConfig;
 import com.analysys.EncryptEnum;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +25,7 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 public class ArgoFlutterPlugin implements MethodCallHandler {
 
     private static final String TAG = "argo.analysys";
-    private static final boolean DEBUG =true;
+    private static final boolean DEBUG = true;
     private final Registrar mRegistrar;
 
     /**
@@ -46,7 +49,7 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
                 Log.e(TAG, "context error!!!");
                 return;
             }
-            if(DEBUG){
+            if (DEBUG) {
                 printAges(call);
             }
             switch (call.method) {
@@ -65,11 +68,23 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
                 case "set_max_cache_size":
                     this.setMaxCacheSize(context, call.arguments);
                     break;
+                case "reportException":
+                    this.reportException(context, call.arguments);
+                    break;
+                case "cleanDBCache":
+                    this.cleanDBCache(context, call.arguments);
+                    break;
+                case "setUploadNetworkType":
+                    this.setUploadNetworkType(context, call.arguments);
+                    break;
                 case "get_max_cache_size":
                     result.success(this.getMaxCacheSize(context));
                     break;
                 case "set_max_event_size":
                     this.setMaxEventSize(context, call.arguments);
+                    break;
+                case "getPresetProperties":
+                    result.success(this.getPresetProperties(context, call.arguments));
                     break;
                 case "flush":
                     this.flush(context);
@@ -91,6 +106,9 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
                     break;
                 case "pageview":
                     this.pageView(context, call.arguments);
+                    break;
+                case "launchSource":
+                    this.launchSource(context, call.arguments);
                     break;
                 case "register_super_property":
                     this.registerSuperProperty(context, call.arguments);
@@ -140,13 +158,39 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
         }
     }
 
+    private void setUploadNetworkType(Context context, Object arguments) {
+        AnalysysAgent.setUploadNetworkType((Integer) arguments);
+    }
+
+    private void reportException(Context context, Object arguments) {
+        AnalysysAgent.reportException(context, new Exception("flutter:" + arguments));
+    }
+    private void cleanDBCache(Context context, Object arguments) {
+        AnalysysAgent.cleanDBCache();
+    }
+
     private void printAges(MethodCall call) {
         String methodName = call.method;
         String ageType = call.arguments.getClass().getName();
         String ageValue = null;
-        if (call.arguments instanceof Map){
-            
+        if (call.arguments instanceof Map) {
+            JSONObject jsonObject = new JSONObject((Map) call.arguments);
+            try {
+                ageValue = jsonObject.toString(2);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            ageValue = String.valueOf(call.arguments);
         }
+        Log.e(TAG, " \n[methodName]" + methodName + "\n" +
+                "[ageType]" + ageType + "\n" +
+                "[ageValue]" + ageValue + "\n");
+    }
+
+    private void launchSource(Context context, Object params) {
+        int source = (int) params;
+        AnalysysAgent.launchSource(source);
     }
 
     private void init(Context context, Object params) {
@@ -228,6 +272,10 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
         if (isIntegerType(params)) {
             AnalysysAgent.setMaxEventSize(context, (Integer) params);
         }
+    }
+
+    private Map<String, Object> getPresetProperties(Context context, Object params) {
+        return AnalysysAgent.getPresetProperties(context);
     }
 
     private void flush(Context context) {
