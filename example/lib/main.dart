@@ -1,13 +1,16 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:argo_flutter_plugin/AnalysysAgent.dart';
 import 'package:argo_flutter_plugin/AnalysysConfig.dart';
+import 'package:flutter/material.dart';
 
 void main() => runApp(App());
 
-typedef VoidCallbackWithTextController = void Function(TextEditingController controller);
-typedef VoidCallbackWithTextController2 = void Function(TextEditingController controller, {TextEditingController controller2});
+typedef VoidCallbackWithTextController = void Function(
+    TextEditingController controller);
+typedef VoidCallbackWithTextController2 = void Function(
+    TextEditingController controller,
+    {TextEditingController controller2});
 
 class FuncTextController {
   VoidCallbackWithTextController callback;
@@ -16,13 +19,16 @@ class FuncTextController {
   TextEditingController textController2;
   VoidCallbackWithTextController2 callback2;
   String hintText2;
-  FuncTextController( this.textController, this.hintText, {this.callback,this.hintText2, this.textController2, this.callback2});
+
+  FuncTextController(this.textController, this.hintText,
+      {this.callback, this.hintText2, this.textController2, this.callback2});
 }
 
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(title: 'Argo Flutter Plugin example app', home: MyApp());
+    return new MaterialApp(
+        title: 'Argo Flutter Plugin example app', home: MyApp());
   }
 }
 
@@ -36,35 +42,91 @@ class _MyAppState extends State<MyApp> {
 
   _MyAppState() {
     _methodList = {
-      "_initMethod": FuncTextController(new TextEditingController(), "appkey", callback: _initMethod),
-      "_setDebugMode": FuncTextController(new TextEditingController(), "debugMode",callback: _setDebugMode),
-      "_setUploadUrl": FuncTextController(new TextEditingController(), "upload url",callback: _setUploadUrl),
-      "_setIntervalTime": FuncTextController(new TextEditingController(), "tinterval time",callback: _setIntervalTime),
-      "_setMaxCacheSize": FuncTextController(new TextEditingController(), "max cache size",callback: _setMaxCacheSize),
-      "_getMaxCacheSize": FuncTextController(new TextEditingController(), "returned max cache size",callback: _getMaxCacheSize),
-      "_setMaxEventSize": FuncTextController(new TextEditingController(), "max event size",callback: _setMaxEventSize),
-      "_flush": FuncTextController(new TextEditingController(), "",callback: _flush),
-      "_alias": FuncTextController(new TextEditingController(),"aliasId",textController2:new TextEditingController(),hintText2:"originalId",callback2 :_alias),
-      "_identify": FuncTextController(new TextEditingController(), "distinctId",callback: _identify),
-      "_getDistinctId": FuncTextController( new TextEditingController(), "returned distinctId",callback: _getDistinctId),
-      "_reset": FuncTextController(new TextEditingController(), "",callback: _reset),
-      "_track": FuncTextController(new TextEditingController(), "eventInfo", textController2: new TextEditingController(), hintText2: "eventInfo",callback2: _track),
-      "_pageView": FuncTextController(new TextEditingController(), "pageName", textController2: new TextEditingController(), hintText2: "pageInfo",callback2: _pageView),
-      "_registerSuperProperty": FuncTextController(new TextEditingController(), "proName",textController2: new TextEditingController(), hintText2: "proValue",callback2: _registerSuperProperty),
-      "_registerSuperProperties": FuncTextController(new TextEditingController(), "properties",callback: _registerSuperProperties),
-      "_unRegisterSuperProperty": FuncTextController(new TextEditingController(), "proName",callback: _unRegisterSuperProperty),
-      "_clearSuperProperties": FuncTextController(new TextEditingController(), "",callback: _clearSuperProperties),
-      "_getSuperProperty": FuncTextController( new TextEditingController(), "proName",callback: _getSuperProperty),
-      "_getSuperProperties": FuncTextController(new TextEditingController(), "",callback: _getSuperProperties),
-      "_profileSet": FuncTextController(new TextEditingController(), "properties",callback: _profileSet),
-      "_profileSetOnce": FuncTextController(new TextEditingController(), "properties",callback: _profileSetOnce),
-      "_profileIncrement": FuncTextController(new TextEditingController(), "properties",callback: _profileIncrement),
-      "_profileAppend": FuncTextController(new TextEditingController(), "properties",callback: _profileAppend),
-      "_profileUnset": FuncTextController(new TextEditingController(), "proName",callback: _profileUnset),
-      "_profileDelete": FuncTextController(new TextEditingController(), "",callback: _profileDelete),
-      "_trackCampaign":FuncTextController(new TextEditingController(), "campaign", textController2: new TextEditingController(), hintText2: "clicked",callback2: _trackCampaign),
+      "_initMethod": FuncTextController(new TextEditingController(), "appkey",
+          callback: _initMethod),
+      "_setDebugMode": FuncTextController(
+          new TextEditingController(), "debugMode",
+          callback: _setDebugMode),
+      "_setUploadUrl": FuncTextController(
+          new TextEditingController(), "upload url",
+          callback: _setUploadUrl),
+      "_setIntervalTime": FuncTextController(
+          new TextEditingController(), "tinterval time",
+          callback: _setIntervalTime),
+      "_setMaxCacheSize": FuncTextController(
+          new TextEditingController(), "max cache size",
+          callback: _setMaxCacheSize),
+      "_getMaxCacheSize": FuncTextController(
+          new TextEditingController(), "returned max cache size",
+          callback: _getMaxCacheSize),
+      "_setMaxEventSize": FuncTextController(
+          new TextEditingController(), "max event size",
+          callback: _setMaxEventSize),
+      "_flush":
+          FuncTextController(new TextEditingController(), "", callback: _flush),
+      "_alias": FuncTextController(new TextEditingController(), "aliasId",
+          textController2: new TextEditingController(),
+          hintText2: "originalId",
+          callback2: _alias),
+      "_identify": FuncTextController(new TextEditingController(), "distinctId",
+          callback: _identify),
+      "_getDistinctId": FuncTextController(
+          new TextEditingController(), "returned distinctId",
+          callback: _getDistinctId),
+      "_reset":
+          FuncTextController(new TextEditingController(), "", callback: _reset),
+      "_track": FuncTextController(new TextEditingController(), "eventInfo",
+          textController2: new TextEditingController(),
+          hintText2: "eventInfo",
+          callback2: _track),
+      "_pageView": FuncTextController(new TextEditingController(), "pageName",
+          textController2: new TextEditingController(),
+          hintText2: "pageInfo",
+          callback2: _pageView),
+      "_registerSuperProperty": FuncTextController(
+          new TextEditingController(), "proName",
+          textController2: new TextEditingController(),
+          hintText2: "proValue",
+          callback2: _registerSuperProperty),
+      "_registerSuperProperties": FuncTextController(
+          new TextEditingController(), "properties",
+          callback: _registerSuperProperties),
+      "_unRegisterSuperProperty": FuncTextController(
+          new TextEditingController(), "proName",
+          callback: _unRegisterSuperProperty),
+      "_clearSuperProperties": FuncTextController(
+          new TextEditingController(), "",
+          callback: _clearSuperProperties),
+      "_getSuperProperty": FuncTextController(
+          new TextEditingController(), "proName",
+          callback: _getSuperProperty),
+      "_getSuperProperties": FuncTextController(new TextEditingController(), "",
+          callback: _getSuperProperties),
+      "_profileSet": FuncTextController(
+          new TextEditingController(), "properties",
+          callback: _profileSet),
+      "_profileSetOnce": FuncTextController(
+          new TextEditingController(), "properties",
+          callback: _profileSetOnce),
+      "_profileIncrement": FuncTextController(
+          new TextEditingController(), "properties",
+          callback: _profileIncrement),
+      "_profileAppend": FuncTextController(
+          new TextEditingController(), "properties",
+          callback: _profileAppend),
+      "_profileUnset": FuncTextController(
+          new TextEditingController(), "proName",
+          callback: _profileUnset),
+      "_profileDelete": FuncTextController(new TextEditingController(), "",
+          callback: _profileDelete),
+      "_trackCampaign": FuncTextController(
+          new TextEditingController(), "campaign",
+          textController2: new TextEditingController(),
+          hintText2: "clicked",
+          callback2: _trackCampaign),
     };
   }
+
   @override
   void initState() {
     super.initState();
@@ -72,11 +134,11 @@ class _MyAppState extends State<MyApp> {
 
   void _initMethod(TextEditingController controller) {
     try {
-      _showDialog("appkey:" + controller.text + "\n channelid:wandoujia");
-      AnalysysConfig config =new AnalysysConfig();
+      AnalysysConfig config = new AnalysysConfig();
       config.appKey = controller.text;
       config.channel = "wandoujia";
-      AnalysysAgent.init(config);
+      AnalysysAgent.init(config)
+          ?.whenComplete(() => _showDialog("init success!"));
     } catch (e) {
       print("_initMethod error with exception:" + e.toString());
     }
@@ -84,8 +146,8 @@ class _MyAppState extends State<MyApp> {
 
   void _setDebugMode(TextEditingController controller) {
     try {
-      _showDialog("debugMode:" + controller.text);
-      AnalysysAgent.setDebugMode(int.parse(controller.text));
+      AnalysysAgent.setDebugMode(int.parse(controller.text))
+          ?.whenComplete(() => _showDialog("debugMode success!"));
     } catch (e) {
       print("setDebugMode error with exception:" + e.toString());
     }
@@ -93,8 +155,8 @@ class _MyAppState extends State<MyApp> {
 
   void _setUploadUrl(TextEditingController controller) {
     try {
-      _showDialog("upload url:" + controller.text);
-      AnalysysAgent.setUploadUrl(controller.text);
+      AnalysysAgent.setUploadUrl(controller.text)?.whenComplete(
+          () => _showDialog('setUploadUrl success! ' + controller.text));
     } catch (e) {
       print("setUploadUrl error with exception:" + e.toString());
     }
@@ -146,9 +208,11 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void _alias(TextEditingController controller, {TextEditingController controller2}) {
+  void _alias(TextEditingController controller,
+      {TextEditingController controller2}) {
     try {
-      _showDialog("aliasId " + controller.text + "  originalId:" + controller2.text);
+      _showDialog(
+          "aliasId " + controller.text + "  originalId:" + controller2.text);
       AnalysysAgent.alias(controller.text, controller2.text);
     } catch (e) {
       print("alias error with exception:" + e.toString());
@@ -183,27 +247,41 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void _track(TextEditingController controller, {TextEditingController controller2}) {
+  void _track(TextEditingController controller,
+      {TextEditingController controller2}) {
     try {
-      _showDialog("track eventName:" + controller.text + "eventInfo:" + controller2.text);
-      AnalysysAgent.track(controller.text, eventInfo: json.decode(controller2.text));
+      _showDialog("track eventName:" +
+          controller.text +
+          "eventInfo:" +
+          controller2.text);
+      AnalysysAgent.track(controller.text,
+          eventInfo: json.decode(controller2.text));
     } catch (e) {
       print("track error with exception:" + e.toString());
     }
   }
 
-  void _pageView(TextEditingController controller, {TextEditingController controller2}) {
+  void _pageView(TextEditingController controller,
+      {TextEditingController controller2}) {
     try {
-      _showDialog("pageView pageName:" + controller.text + "pageInfo:" + controller2.text);
-      AnalysysAgent.pageView(controller.text, pageInfo: json.decode(controller2.text));
+      _showDialog("pageView pageName:" +
+          controller.text +
+          "pageInfo:" +
+          controller2.text);
+      AnalysysAgent.pageView(controller.text,
+          pageInfo: json.decode(controller2.text));
     } catch (e) {
       print("pageView error with exception:" + e.toString());
     }
   }
 
-  void _registerSuperProperty(TextEditingController controller, {TextEditingController controller2}) {
+  void _registerSuperProperty(TextEditingController controller,
+      {TextEditingController controller2}) {
     try {
-      _showDialog("registerSuperProperty propertyName:" + controller.text + "propertyValue:" + controller2.text);
+      _showDialog("registerSuperProperty propertyName:" +
+          controller.text +
+          "propertyValue:" +
+          controller2.text);
       AnalysysAgent.registerSuperProperty(controller.text, controller2.text);
     } catch (e) {
       print("registerSuperProperty error with exception:" + e.toString());
@@ -240,7 +318,10 @@ class _MyAppState extends State<MyApp> {
   void _getSuperProperty(TextEditingController controller) {
     try {
       AnalysysAgent.getSuperProperty(controller.text).then((val) {
-        _showDialog("getSuperProperty propertyName" + controller.text + " value:" + val.toString());
+        _showDialog("getSuperProperty propertyName" +
+            controller.text +
+            " value:" +
+            val.toString());
       });
     } catch (e) {
       print("get super property with exception:" + e.toString());
@@ -250,7 +331,10 @@ class _MyAppState extends State<MyApp> {
   void _getSuperProperties(TextEditingController controller) {
     try {
       AnalysysAgent.getSuperProperties().then((val) {
-        _showDialog("getSuperProperty propertyName" + controller.text + " value:" + val.toString());
+        _showDialog("getSuperProperty propertyName" +
+            controller.text +
+            " value:" +
+            val.toString());
       });
     } catch (e) {
       print("get super properties with exception:" + e.toString());
@@ -311,10 +395,15 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void _trackCampaign(TextEditingController controller, {TextEditingController controller2}) {
+  void _trackCampaign(TextEditingController controller,
+      {TextEditingController controller2}) {
     try {
-      _showDialog("trackCampaign:" + controller.text + "  isClicked:" + controller2.text);
-      AnalysysAgent.trackCampaign(controller.text, int.tryParse(controller2.text) > 0 ? true : false);
+      _showDialog("trackCampaign:" +
+          controller.text +
+          "  isClicked:" +
+          controller2.text);
+      AnalysysAgent.trackCampaign(
+          controller.text, int.tryParse(controller2.text) > 0 ? true : false);
     } catch (e) {
       print("trackCampaign error with exception:" + e.toString());
     }
@@ -348,7 +437,8 @@ class _MyAppState extends State<MyApp> {
                     ),
                   ),
                   border: InputBorder.none,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
             ),
           ),
         ),
@@ -381,7 +471,8 @@ class _MyAppState extends State<MyApp> {
                       ),
                     ),
                     border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 25, vertical: 13)),
               ),
             ),
           ),
@@ -392,11 +483,16 @@ class _MyAppState extends State<MyApp> {
           padding: EdgeInsets.symmetric(horizontal: 32),
           child: Container(
             width: double.infinity,
-            decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(100)), color: theme.primaryColor),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(100)),
+                color: theme.primaryColor),
             child: FlatButton(
               child: Text(
                 k,
-                style: TextStyle(color: Colors.yellow, fontWeight: FontWeight.w500, fontSize: 18),
+                style: TextStyle(
+                    color: Colors.yellow,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 18),
               ),
               onPressed: () {
                 if (Comparable.compare(k, "_alias") == 0 ||
@@ -416,16 +512,18 @@ class _MyAppState extends State<MyApp> {
     });
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Argo Flutter Plugin example app'),
+        title: const Text('Argo Flutter SDK example app'),
       ),
-      body: SingleChildScrollView(
-        child: GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: () {
-            FocusScope.of(context).requestFocus(new FocusNode());
-          },
-          child: SafeArea(
-            child: Column(children: buttonWidgets),
+      body: Scrollbar(
+        child: SingleChildScrollView(
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: SafeArea(
+              child: Column(children: buttonWidgets),
+            ),
           ),
         ),
       ),

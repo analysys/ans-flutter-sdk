@@ -42,7 +42,8 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
 
     @Override
     public void onMethodCall(MethodCall call, Result result) {
-
+        //执行结束的返回值，供给flutter方处理，如果void 则为空
+        Object callbackObject = null;
         try {
             Context context = getActiveContext();
             if (context == null) {
@@ -52,6 +53,7 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
             if (DEBUG) {
                 printAges(call);
             }
+
             switch (call.method) {
                 case "init":
                     this.init(context, call.arguments);
@@ -78,13 +80,13 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
                     this.setUploadNetworkType(context, call.arguments);
                     break;
                 case "get_max_cache_size":
-                    result.success(this.getMaxCacheSize(context));
+                    callbackObject = this.getMaxCacheSize(context);
                     break;
                 case "set_max_event_size":
                     this.setMaxEventSize(context, call.arguments);
                     break;
                 case "getPresetProperties":
-                    result.success(this.getPresetProperties(context, call.arguments));
+                    callbackObject = this.getPresetProperties(context, call.arguments);
                     break;
                 case "flush":
                     this.flush(context);
@@ -96,7 +98,7 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
                     this.identify(context, call.arguments);
                     break;
                 case "get_distinct_id":
-                    result.success(this.getDistinctId(context));
+                    callbackObject = this.getDistinctId(context);
                     break;
                 case "reset":
                     this.reset(context);
@@ -123,10 +125,10 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
                     this.clearSuperProperties(context);
                     break;
                 case "get_super_property":
-                    result.success(this.getSuperProperty(context, call.arguments));
+                    callbackObject = this.getSuperProperty(context, call.arguments);
                     break;
                 case "get_super_properties":
-                    result.success(this.getSuperProperties(context));
+                    callbackObject = this.getSuperProperties(context);
                     break;
                 case "profile_set":
                     this.profileSet(context, call.arguments);
@@ -150,12 +152,15 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
                     this.trackCampaign(context, call.arguments);
                     break;
                 default:
+                    //未找到实现
                     result.notImplemented();
                     break;
             }
         } catch (Exception e) {
+            result.error("100", e.getMessage(), e.toString());
             e.printStackTrace();
         }
+        result.success(callbackObject);
     }
 
     private void setUploadNetworkType(Context context, Object arguments) {
@@ -165,6 +170,7 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
     private void reportException(Context context, Object arguments) {
         AnalysysAgent.reportException(context, new Exception("flutter:" + arguments));
     }
+
     private void cleanDBCache(Context context, Object arguments) {
         AnalysysAgent.cleanDBCache();
     }
