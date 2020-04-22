@@ -1,3 +1,5 @@
 ## 1.0.0
 
 * 支持方舟4.4.5版本SDK
+* TODO: Describe initial release.
+
