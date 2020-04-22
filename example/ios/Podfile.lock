@@ -1,29 +1,29 @@
 PODS:
-  - AnalysysAgent_CMB (4.3.3)
-  - argo_flutter_plugin (0.0.1):
-    - AnalysysAgent_CMB (~> 4.3.3)
+  - AnalysysAgent (4.4.5)
+  - argo_flutter_plugin (1.0.0):
+    - AnalysysAgent (~> 4.4.5)
     - Flutter
   - Flutter (1.0.0)
 
 DEPENDENCIES:
   - argo_flutter_plugin (from `.symlinks/plugins/argo_flutter_plugin/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `Flutter`)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
-    - AnalysysAgent_CMB
+  trunk:
+    - AnalysysAgent
 
 EXTERNAL SOURCES:
   argo_flutter_plugin:
     :path: ".symlinks/plugins/argo_flutter_plugin/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: Flutter
 
 SPEC CHECKSUMS:
-  AnalysysAgent_CMB: 53b985df2782924a3c4f663218cd33d28478e17e
-  argo_flutter_plugin: 899eb0b352e92fb532cfecea783e3afc548f31e8
-  Flutter: 58dd7d1b27887414a370fcccb9e645c08ffd7a6a
+  AnalysysAgent: 13050681c00f1674f467306d7be67b6039018db5
+  argo_flutter_plugin: 22d4d473bb228762822ffda270b14a55ad3f1ee8
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
 
-PODFILE CHECKSUM: 7fb83752f59ead6285236625b82473f90b1cb932
+PODFILE CHECKSUM: 3dbe063e9c90a5d7c9e4e76e70a821b9e2c1d271
 
-COCOAPODS: 1.7.5
+COCOAPODS: 1.8.4

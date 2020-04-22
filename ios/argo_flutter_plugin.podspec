@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'argo_flutter_plugin'
-  s.version          = '0.0.1'
+  s.version          = '1.0.0'
   s.summary          = 'Argo Flutter plugin.'
   s.description      = <<-DESC
 Argo Flutter plugin.
@@ -15,7 +15,7 @@ Argo Flutter plugin.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'AnalysysAgent_CMB', '~> 4.3.3'
+  s.dependency 'AnalysysAgent', '~> 4.4.5'
   s.ios.deployment_target = '8.0'
 end
 

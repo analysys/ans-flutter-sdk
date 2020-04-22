@@ -7,59 +7,34 @@ class AnalysysAgent {
   static const MethodChannel _channel =
       const MethodChannel('argo_flutter_plugin');
 
-  static Future<void> init(AnalysysConfig config) {
+  //****************************** 易观SDK初始化设置 *********************************//
+
+  ///  配置SDK
+  /// 
+  /// ```dart
+  /// AnalysysConfig config = new AnalysysConfig();
+  /// config.appKey = 'heatmaptest0916';
+  /// config.channel = "App Store";
+  /// ....
+  /// AnalysysAgent.startWithConfig(config)
+  /// ```
+  static Future<void> startWithConfig(AnalysysConfig config) {
     try {
-      return _channel.invokeMethod('init', config.toMap());
+      return _channel.invokeMethod('startWithConfig', config.toMap());
     } catch (e) {
       print("init error with exception:" + e.toString());
     }
     return null;
   }
 
-  static Future<void> setDebugMode(int mode) {
-    try {
-      return _channel.invokeMethod('set_debug_mode', mode);
-    } catch (e) {
-      print("setDebugMode error with exception:" + e.toString());
-    }
-    return null;
-  }
+  //****************************** 服务器地址设置 *********************************//
 
-  ///   不允许上传 0
-  ///   允许移动网络上传 1 << 1
-  ///   允许wifi网络  1 << 2
-  ///   允许所有网络 0xFF;
-  static Future<void> setUploadNetworkType(int type) {
-    try {
-      return _channel.invokeMethod('setUploadNetworkType', type);
-    } catch (e) {
-      print("setUploadNetworkType error with exception:" + e.toString());
-    }
-    return null;
-  }
-
-  static Future<void> reportException(String exception) {
-    try {
-      return _channel.invokeMethod('reportException', exception);
-    } catch (e) {
-      print("reportException error with exception:" + e.toString());
-    }
-    return null;
-  }
-
-  static Future<void> cleanDBCache() {
-    try {
-      return _channel.invokeMethod('cleanDBCache');
-    } catch (e) {
-      print("cleanDBCache error with exception:" + e.toString());
-    }
-    return null;
-  }
-
-  static Future<Map<String, Object>> getPresetProperties() async {
-    return await _channel.invokeMethod('getPresetProperties');
-  }
-
+  ///  设置上传数据地址
+  /// 
+  /// ```dart
+  /// [url] 格式：http://host:port 或 https://host:port
+  /// AnalysysAgent.setUploadUrl('http://192.168.220.105:8089');
+  /// ```
   static Future<void> setUploadUrl(String url) {
     try {
       return _channel.invokeMethod('set_upload_url', url);
@@ -69,6 +44,34 @@ class AnalysysAgent {
     return null;
   }
 
+  //****************************** SDK发送策略 *********************************//
+
+  ///  设置调试模式
+  /// 
+  /// [mode]说明：
+  ///  0 关闭Debug模式 上线时设置
+  ///  1 打开Debug模式，但该模式下发送的数据仅用于调试，不进行数据导入
+  ///  2 打开Debug模式，并入库计算
+  /// 
+  /// ```dart
+  /// AnalysysAgent.setDebugMode(2);
+  /// ```
+  static Future<void> setDebugMode(int mode) {
+    try {
+      return _channel.invokeMethod('set_debug_mode', mode);
+    } catch (e) {
+      print("setDebugMode error with exception:" + e.toString());
+    }
+    return null;
+  }
+
+  ///  设置上传间隔时间
+  /// 
+  /// [interval]说明：单位：秒，仅 setDebugMode = 0 时生效
+  /// 
+  /// ```dart
+  /// AnalysysAgent.setIntervalTime(10);
+  /// ```
   static Future<void> setIntervalTime(int interval) {
     try {
       return _channel.invokeMethod('set_interval_time', interval);
@@ -78,6 +81,13 @@ class AnalysysAgent {
     return null;
   }
 
+  ///  本地缓存上限值
+  /// 
+  /// [mode]说明：最小值为100，默认10000条，超过此数据默认清理最早的10条数据
+  ///
+  /// ```dart
+  /// AnalysysAgent.setMaxCacheSize(10000);
+  /// ```
   static Future<void> setMaxCacheSize(int mode) {
     try {
       return _channel.invokeMethod('set_max_cache_size', mode);
@@ -87,10 +97,22 @@ class AnalysysAgent {
     return null;
   }
 
+  ///  获取本地缓存最大值
+  /// 
+  /// ```dart
+  /// AnalysysAgent.getMaxCacheSize();
+  /// ```
   static Future<int> getMaxCacheSize() async {
     return await _channel.invokeMethod('get_max_cache_size');
   }
 
+  ///   数据累积"size"条数后触发上传
+  /// 
+  /// [mode]说明：仅 setDebugMode = 0 时生效
+  /// 
+  /// ```dart
+  /// AnalysysAgent.setMaxEventSize(10);
+  /// ```
   static Future<void> setMaxEventSize(int mode) {
     try {
       return _channel.invokeMethod('set_max_event_size', mode);
@@ -100,6 +122,11 @@ class AnalysysAgent {
     return null;
   }
 
+  ///  主动触发数据上传
+  /// 
+  /// ```dart
+  /// AnalysysAgent.flush();
+  /// ```
   static Future<void> flush() {
     try {
       return _channel.invokeMethod('flush');
@@ -109,45 +136,63 @@ class AnalysysAgent {
     return null;
   }
 
-  static Future<void> alias(String aliasId, String originalId) {
+  /// 设置数据网络上传策略
+  /// 
+  /// [type]说明：
+  /// 0：不允许上传 
+  /// 2：允许移动网络上传
+  /// 4：允许wifi网络
+  /// 255：允许所有网络
+  /// 
+  /// ```dart
+  /// AnalysysAgent.setUploadNetworkType(0xFF);
+  /// ```
+  static Future<void> setUploadNetworkType(int type) {
     try {
-      Map<String, dynamic> params = {};
-      if (aliasId != null && aliasId.length > 0) {
-        params["alias_id"] = aliasId;
-      }
-      if (originalId != null && originalId.length > 0) {
-        params["original_id"] = originalId;
-      }
-      return _channel.invokeMethod('alias', params);
+      return _channel.invokeMethod('setUploadNetworkType', type);
     } catch (e) {
-      print("alias error with exception:" + e.toString());
+      print("setUploadNetworkType error with exception:" + e.toString());
     }
     return null;
   }
 
-  static Future<void> identify(String distinctId) {
+  ///  清除本地所有已缓存数据
+  /// 
+  /// ```dart
+  /// AnalysysAgent.cleanDBCache();
+  /// ```
+  static Future<void> cleanDBCache() {
     try {
-      return _channel.invokeMethod('identify', distinctId);
+      return _channel.invokeMethod('cleanDBCache');
     } catch (e) {
-      print("identify error with exception:" + e.toString());
+      print("cleanDBCache error with exception:" + e.toString());
     }
     return null;
   }
 
-  static Future<String> getDistinctId() async {
-    return await _channel.invokeMethod('get_distinct_id');
-  }
-
-  static Future<void> reset() {
+  /// 设置是否自动采集原生页面生命周期，默认为true
+  /// 
+  /// ```dart
+  /// AnalysysAgent.setAutomaticCollection(true);
+  /// ```
+  static Future<void> setAutomaticCollection(bool autoCollection) {
     try {
-      return _channel.invokeMethod('reset');
+      return _channel.invokeMethod('setAutomaticCollection', autoCollection);
     } catch (e) {
-      print("reset error with exception:" + e.toString());
+      print("cleanDBCache error with exception:" + e.toString());
     }
     return null;
   }
 
-  static Future<void> track(String eventName, {Map<String, Object> eventInfo}) {
+  //****************************** 事件相关 *********************************//
+
+  ///  事件信息  eventInfo 可选
+  /// 
+  /// ```dart
+  /// Map<String, Object> properties = {"eventKey": "eventValue"};
+  /// AnalysysAgent.track("eventProperties", properties);
+  /// ```
+  static Future<void> track(String eventName, [Map<String, Object> eventInfo]) {
     try {
       if (eventName == null) {
         print("track eventName can not be null:");
@@ -165,8 +210,13 @@ class AnalysysAgent {
     return null;
   }
 
-  static Future<void> pageView(String pageName,
-      {Map<String, Object> pageInfo}) {
+  ///  页面信息 pageInfo 可选
+  /// 
+  /// ```dart
+  /// Map<String, Object> properties = {"pageKey": "pageValue"};
+  /// AnalysysAgent.pageView("pageDetail", properties);
+  /// ```
+  static Future<void> pageView(String pageName, [Map<String, Object> pageInfo]) {
     try {
       if (pageName == null) {
         print("pageView pageName can not be null!");
@@ -184,84 +234,73 @@ class AnalysysAgent {
     return null;
   }
 
-  /// 应用启动来源，
-  /// 参数为 1. icon启动 默认值为icon启动
-  /// 参数为 2. msg 启动
-  /// 参数为 3. deepLink启动
-  /// 参数为 5. 其他方式启动
-  static Future<void> launchSource(int source) {
+  // static Future<void> reportException(String exception) {
+  //   try {
+  //     return _channel.invokeMethod('reportException', exception);
+  //   } catch (e) {
+  //     print("reportException error with exception:" + e.toString());
+  //   }
+  //   return null;
+  // }
+
+
+  //****************************** 用户相关 *********************************//
+  ///  用户关联。小于255字符
+  /// 
+  /// ```dart
+  /// AnalysysAgent.alias("18899668899");
+  /// ```
+  static Future<void> alias(String aliasId) {
     try {
-      return _channel.invokeMethod('launchSource', source);
+      return _channel.invokeMethod('alias', aliasId);
     } catch (e) {
-      print("pageView error with exception:" + e.toString());
+      print("alias error with exception:" + e.toString());
     }
     return null;
   }
 
-  static Future<void> registerSuperProperty(
-      String superPropertyName, Object superPropertyValue) {
+  ///  匿名ID设置。小于255字符
+  /// 
+  /// ```dart
+  /// AnalysysAgent.identify("游客");
+  /// ```
+  static Future<void> identify(String distinctId) {
     try {
-      if (superPropertyName == null || superPropertyValue == null) {
-        print("registerSuperProperty param can not be null!");
-        return null;
-      }
-      Map<String, Object> params = {};
-      params['property_name'] = superPropertyName;
-      params['property_value'] = superPropertyValue;
-      return _channel.invokeMethod('register_super_property', params);
+      return _channel.invokeMethod('identify', distinctId);
     } catch (e) {
-      print("registerSuperProperty error with exception:" + e.toString());
+      print("identify error with exception:" + e.toString());
     }
     return null;
   }
 
-  static Future<void> registerSuperProperties(
-      Map<String, Object> superProperty) {
+  ///  获取匿名标识
+  /// 
+  /// ```dart
+  /// var distinctID = AnalysysAgent.getDistinctId();
+  /// ```
+  static Future<String>getDistinctId() async {
+    return await _channel.invokeMethod('get_distinct_id');
+  }
+
+  ///  清除本地设置（anonymousId、aliasID、superProperties）
+  /// 
+  /// ```dart
+  /// AnalysysAgent.reset();
+  /// ```
+  static Future<void>reset() {
     try {
-      if (superProperty == null) {
-        print("registerSuperProperties param can not be null!");
-        return null;
-      }
-      Map<String, Object> params = {};
-      params['properties'] = superProperty;
-      return _channel.invokeMethod('register_super_properties', params);
+      return _channel.invokeMethod('reset');
     } catch (e) {
-      print("registerSuperProperties error with exception:" + e.toString());
+      print("reset error with exception:" + e.toString());
     }
     return null;
   }
 
-  static Future<void> unRegisterSuperProperty(String superPropertyName) {
-    try {
-      if (superPropertyName == null) {
-        print("unRegisterSuperProperty param can not be null!");
-        return null;
-      }
-      return _channel.invokeMethod(
-          'unregister_super_property', superPropertyName);
-    } catch (e) {
-      print("unRegisterSuperProperty error with exception:" + e.toString());
-    }
-    return null;
-  }
-
-  static Future<void> clearSuperProperties() {
-    try {
-      return _channel.invokeMethod('clear_super_properties');
-    } catch (e) {
-      print("clearSuperProperties error with exception:" + e.toString());
-    }
-    return null;
-  }
-
-  static Future<Object> getSuperProperty(String key) async {
-    return await _channel.invokeMethod('get_super_property', key);
-  }
-
-  static Future<Object> getSuperProperties() async {
-    return await _channel.invokeMethod('get_super_properties');
-  }
-
+  ///  设置用户属性
+  /// 
+  /// ```dart
+  /// AnalysysAgent.profileSet({"hobby": "playfootball"});
+  /// ```
   static Future<void> profileSet(Map<String, Object> property) {
     try {
       if (property == null) {
@@ -277,6 +316,11 @@ class AnalysysAgent {
     return null;
   }
 
+  ///  设置用户单次生效属性
+  /// 
+  /// ```dart
+  /// AnalysysAgent.profileSetOnce({"birthday": "1997-7-1"});
+  /// ```
   static Future<void> profileSetOnce(Map<String, Object> property) {
     try {
       if (property == null) {
@@ -292,7 +336,12 @@ class AnalysysAgent {
     return null;
   }
 
-  static Future<void> profileIncrement(Map<String, dynamic> property) {
+  ///  设置用户属性相对变化值  多个 value必须为数字
+  /// 
+  /// ```dart
+  /// AnalysysAgent.profileIncrement({"points": 99});
+  /// ```
+  static Future<void> profileIncrement(Map<String, num> property) {
     try {
       if (property == null) {
         print("profileIncrement param can not be null!");
@@ -307,7 +356,12 @@ class AnalysysAgent {
     return null;
   }
 
-  static Future<void> profileAppend(Map<String, Object> property) {
+  /// 增加列表类型的属性 value必须为列表
+  /// 
+  /// ```dart
+  /// AnalysysAgent.profileAppend({"books": ["红楼梦", "水浒传"]});
+  /// ```
+  static Future<void> profileAppend(Map<String, List> property) {
     try {
       if (property == null) {
         print("profileAppend param can not be null!");
@@ -322,6 +376,11 @@ class AnalysysAgent {
     return null;
   }
 
+  ///  删除某个用户属性
+  /// 
+  /// ```dart
+  /// AnalysysAgent.profileUnset("birthday");
+  /// ```
   static Future<void> profileUnset(String propertyName) {
     try {
       if (propertyName == null) {
@@ -335,6 +394,10 @@ class AnalysysAgent {
     return null;
   }
 
+  ///  删除当前用户的所有属性
+  /// ```dart
+  /// AnalysysAgent.profileDelete();
+  /// ```
   static Future<void> profileDelete() {
     try {
       return _channel.invokeMethod('profile_delete');
@@ -343,6 +406,112 @@ class AnalysysAgent {
     }
     return null;
   }
+
+  //****************************** 通用属性 *********************************//
+
+  ///  添加单个通用属性
+  /// 
+  /// ```dart
+  /// AnalysysAgent.registerSuperProperty("gender", "male");
+  /// ```
+  static Future<void> registerSuperProperty(String superPropertyName, Object superPropertyValue) {
+    try {
+      if (superPropertyName == null || superPropertyValue == null) {
+        print("registerSuperProperty param can not be null!");
+        return null;
+      }
+      Map<String, Object> params = {};
+      params['property_name'] = superPropertyName;
+      params['property_value'] = superPropertyValue;
+      return _channel.invokeMethod('register_super_property', params);
+    } catch (e) {
+      print("registerSuperProperty error with exception:" + e.toString());
+    }
+    return null;
+  }
+
+  ///  添加多个通用属性
+  /// 
+  /// ```dart
+  /// AnalysysAgent.registerSuperProperties({"age":30, "address":"beijing"});
+  /// ```
+  static Future<void> registerSuperProperties(Map<String, Object> superProperty) {
+    try {
+      if (superProperty == null) {
+        print("registerSuperProperties param can not be null!");
+        return null;
+      }
+      Map<String, Object> params = {};
+      params['properties'] = superProperty;
+      return _channel.invokeMethod('register_super_properties', params);
+    } catch (e) {
+      print("registerSuperProperties error with exception:" + e.toString());
+    }
+    return null;
+  }
+
+  ///  删除某个通用属性
+  /// 
+  /// ```dart
+  /// AnalysysAgent.unRegisterSuperProperty("age");
+  /// ```
+  static Future<void> unRegisterSuperProperty(String superPropertyName) {
+    try {
+      if (superPropertyName == null) {
+        print("unRegisterSuperProperty param can not be null!");
+        return null;
+      }
+      return _channel.invokeMethod(
+          'unregister_super_property', superPropertyName);
+    } catch (e) {
+      print("unRegisterSuperProperty error with exception:" + e.toString());
+    }
+    return null;
+  }
+
+  ///  清除所有通用属性
+  /// 
+  /// ```dart
+  /// AnalysysAgent.clearSuperProperties();
+  /// ```
+  static Future<void> clearSuperProperties() {
+    try {
+      return _channel.invokeMethod('clear_super_properties');
+    } catch (e) {
+      print("clearSuperProperties error with exception:" + e.toString());
+    }
+    return null;
+  }
+
+  ///  获取某个通用属性
+  /// 
+  /// ```dart
+  /// var value = AnalysysAgent.getSuperProperty("address");
+  /// ```
+  static Future<Object> getSuperProperty(String key) async {
+    return await _channel.invokeMethod('get_super_property', key);
+  }
+
+  ///  获取已注册通用属性
+  /// 
+  /// ```dart
+  /// var superProperties = AnalysysAgent.getSuperProperties();
+  /// ```
+  static Future<Map<String, Object>> getSuperProperties() async {
+    return await _channel.invokeMethod('get_super_properties');
+  }
+
+  ///  SDK预置属性
+  /// 
+  /// ```dart
+  /// var presetProperties = AnalysysAgent.getPresetProperties();
+  /// ```
+  static Future<Map<String, Object>> getPresetProperties() async {
+    return await _channel.invokeMethod('getPresetProperties');
+  }
+
+
+  //****************************** 消息推送 *********************************//
 
   static Future<void> trackCampaign(String campaign, bool isClick) {
     try {
@@ -357,6 +526,21 @@ class AnalysysAgent {
       return _channel.invokeMethod('track_campaign', params);
     } catch (e) {
       print("trackCampaign error with exception:" + e.toString());
+    }
+    return null;
+  }
+
+
+  /// 应用启动来源，
+  /// 参数为 1. icon启动 默认值为icon启动
+  /// 参数为 2. msg 启动
+  /// 参数为 3. deepLink启动
+  /// 参数为 5. 其他方式启动
+  static Future<void> launchSource(int source) {
+    try {
+      return _channel.invokeMethod('launchSource', source);
+    } catch (e) {
+      print("pageView error with exception:" + e.toString());
     }
     return null;
   }
