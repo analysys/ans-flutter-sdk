@@ -28,7 +28,8 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        title: 'Argo Flutter Plugin example app', home: MyApp());
+        title: 'Argo Flutter Plugin example app', 
+        home: MyApp());
   }
 }
 
@@ -42,7 +43,7 @@ class _MyAppState extends State<MyApp> {
 
   _MyAppState() {
     _methodList = {
-      "_initMethod": FuncTextController(new TextEditingController(), "appkey",
+      "_configSDK": FuncTextController(new TextEditingController(), "appkey",
           callback: _initMethod),
       "_setDebugMode": FuncTextController(
           new TextEditingController(), "debugMode",
@@ -64,10 +65,10 @@ class _MyAppState extends State<MyApp> {
           callback: _setMaxEventSize),
       "_flush":
           FuncTextController(new TextEditingController(), "", callback: _flush),
+      "_setUploadNetworkType":
+          FuncTextController(new TextEditingController(), "", callback: _setUploadNetworkType),
       "_alias": FuncTextController(new TextEditingController(), "aliasId",
-          textController2: new TextEditingController(),
-          hintText2: "originalId",
-          callback2: _alias),
+          callback: _alias),
       "_identify": FuncTextController(new TextEditingController(), "distinctId",
           callback: _identify),
       "_getDistinctId": FuncTextController(
@@ -134,11 +135,26 @@ class _MyAppState extends State<MyApp> {
 
   void _initMethod(TextEditingController controller) {
     try {
+      // if(controller.text.length == 0) {
+      //   print("请填写appkey!");
+      //   return;
+      // }
       AnalysysConfig config = new AnalysysConfig();
-      config.appKey = controller.text;
-      config.channel = "wandoujia";
-      AnalysysAgent.init(config)
+      // config.appKey = controller.text;
+      config.appKey = 'heatmaptest0916';
+      config.channel = "App Store";
+      config.autoProfile = false;
+      config.autoInstallation = true;
+      config.autoTrackDeviceId = true;
+      config.encryptType = 1;
+      config.autoInstallation = true;
+      config.allowTimeCheck = true;
+      config.maxDiffTimeInterval = 5 * 60;
+      AnalysysAgent.startWithConfig(config)
           ?.whenComplete(() => _showDialog("init success!"));
+
+      AnalysysAgent.setDebugMode(2);
+      AnalysysAgent.setUploadUrl('http://192.168.220.105:8089');
     } catch (e) {
       print("_initMethod error with exception:" + e.toString());
     }
@@ -146,8 +162,46 @@ class _MyAppState extends State<MyApp> {
 
   void _setDebugMode(TextEditingController controller) {
     try {
-      AnalysysAgent.setDebugMode(int.parse(controller.text))
-          ?.whenComplete(() => _showDialog("debugMode success!"));
+      // AnalysysAgent.setDebugMode(int.parse(controller.text))
+          // ?.whenComplete(() => _showDialog("debugMode success!"));
+
+      // AnalysysAgent.setAutomaticCollection(true);
+      // AnalysysAgent.setIntervalTime(10);
+      // AnalysysAgent.setMaxEventSize(10);
+      // AnalysysAgent.setMaxCacheSize(1000);
+
+      // AnalysysAgent.identify("fangke");
+      // var distinctID = AnalysysAgent.getDistinctId();
+      // print("distinctID:" + distinctID.toString());
+
+      // AnalysysAgent.getDistinctId().then((userId){
+      //   print("user " + userId);
+      // });
+
+      // AnalysysAgent.alias("18899668899");
+
+      // var presetProperties = AnalysysAgent.getPresetProperties();
+      // print("presetProperties:" + presetProperties.toString());
+    
+      // AnalysysAgent.reset();
+      // AnalysysAgent.cleanDBCache();
+
+      // AnalysysAgent.setUploadNetworkType(0xFF);
+
+      // AnalysysAgent.flush();
+
+      // AnalysysAgent.registerSuperProperty("gender", "male");
+      // AnalysysAgent.registerSuperProperties({"age":30, "address":"beijing"});
+      // AnalysysAgent.unRegisterSuperProperty("age");
+      // AnalysysAgent.clearSuperProperties();
+
+      // AnalysysAgent.profileSet({"hobby": "playfootball"});
+      // AnalysysAgent.profileSetOnce({"birthday": "1997-7-1"});
+      // AnalysysAgent.profileIncrement({"积分": 99});
+      // AnalysysAgent.profileAppend({"books": ["红楼梦", "水浒传"]});
+      // AnalysysAgent.profileUnset("birthday");
+      // AnalysysAgent.profileDelete();
+
     } catch (e) {
       print("setDebugMode error with exception:" + e.toString());
     }
@@ -155,8 +209,16 @@ class _MyAppState extends State<MyApp> {
 
   void _setUploadUrl(TextEditingController controller) {
     try {
-      AnalysysAgent.setUploadUrl(controller.text)?.whenComplete(
-          () => _showDialog('setUploadUrl success! ' + controller.text));
+      // AnalysysAgent.setUploadUrl(controller.text)?.whenComplete(
+      //     () => _showDialog('setUploadUrl success! ' + controller.text));
+      // AnalysysAgent.setUploadUrl("https://arkpaastest.analysys.cn:4089");
+
+      // var superProperties = AnalysysAgent.getSuperProperties();
+      // var value = AnalysysAgent.getSuperProperty("address");
+      // print("value:" + value.toString());
+
+      // AnalysysAgent.pageView("homePage");
+      AnalysysAgent.pageView("detailPage", {"detail":"详情页"});
     } catch (e) {
       print("setUploadUrl error with exception:" + e.toString());
     }
@@ -208,12 +270,21 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
-  void _alias(TextEditingController controller,
-      {TextEditingController controller2}) {
+  void _setUploadNetworkType(TextEditingController controller) {
     try {
-      _showDialog(
-          "aliasId " + controller.text + "  originalId:" + controller2.text);
-      AnalysysAgent.alias(controller.text, controller2.text);
+      _showDialog("setUploadNetworkType " + controller.text);
+      AnalysysAgent.setUploadNetworkType(0xff);
+    } catch (e) {
+      print("flush error with exception:" + e.toString());
+    }
+  }
+
+  void _alias(TextEditingController controller) {
+    try {
+      // _showDialog(
+      //     "aliasId " + controller.text);
+      // AnalysysAgent.alias(controller.text);
+      AnalysysAgent.alias("18688886666");
     } catch (e) {
       print("alias error with exception:" + e.toString());
     }
@@ -231,7 +302,7 @@ class _MyAppState extends State<MyApp> {
   void _getDistinctId(TextEditingController controller) {
     try {
       AnalysysAgent.getDistinctId().then((val) {
-        _showDialog("max cache size: " + val.toString());
+        _showDialog("distinctID: " + val.toString());
       });
     } catch (e) {
       print("_getDistinctId error with exception:" + e.toString());
@@ -250,26 +321,35 @@ class _MyAppState extends State<MyApp> {
   void _track(TextEditingController controller,
       {TextEditingController controller2}) {
     try {
-      _showDialog("track eventName:" +
-          controller.text +
-          "eventInfo:" +
-          controller2.text);
-      AnalysysAgent.track(controller.text,
-          eventInfo: json.decode(controller2.text));
+      // _showDialog("track eventName:" +
+      //     controller.text +
+      //     "eventInfo:" +
+      //     controller2.text);
+      // AnalysysAgent.track(controller.text,
+      //     eventInfo: json.decode(controller2.text));
+
+        AnalysysAgent.track("event");
+
+        Map<String, Object> properties = {"eventKey": "eventValue"};
+        AnalysysAgent.track("eventProperties", properties);
     } catch (e) {
-      print("track error with exception:" + e.toString());
+      print("track error with exception:" + e);
     }
   }
 
   void _pageView(TextEditingController controller,
       {TextEditingController controller2}) {
     try {
-      _showDialog("pageView pageName:" +
-          controller.text +
-          "pageInfo:" +
-          controller2.text);
-      AnalysysAgent.pageView(controller.text,
-          pageInfo: json.decode(controller2.text));
+    //   _showDialog("pageView pageName:" +
+    //       controller.text +
+    //       "pageInfo:" +
+    //       controller2.text);
+    //   AnalysysAgent.pageView(controller.text,
+    //       pageInfo: json.decode(controller2.text));
+      AnalysysAgent.pageView("pageHome");
+
+      Map<String, Object> properties = {"pageKey": "pageValue"};
+      AnalysysAgent.pageView("pageDetail", properties);
     } catch (e) {
       print("pageView error with exception:" + e.toString());
     }
@@ -361,8 +441,10 @@ class _MyAppState extends State<MyApp> {
 
   void _profileIncrement(TextEditingController controller) {
     try {
-      _showDialog("profileIncrement propertyInfo:" + controller.text);
-      AnalysysAgent.profileIncrement(json.decode(controller.text));
+      // _showDialog("profileIncrement propertyInfo:" + controller.text);
+      // AnalysysAgent.profileIncrement(json.decode(controller.text));
+      Map<String, num> properties = {"fruit": 4};
+      AnalysysAgent.profileIncrement(properties);
     } catch (e) {
       print("profileIncrement error with exception:" + e.toString());
     }
@@ -443,8 +525,7 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       );
-      if (Comparable.compare(k, "_alias") == 0 ||
-          Comparable.compare(k, "_track") == 0 ||
+      if (Comparable.compare(k, "_track") == 0 ||
           Comparable.compare(k, "_pageView") == 0 ||
           Comparable.compare(k, "_registerSuperProperty") == 0 ||
           Comparable.compare(k, "_trackCampaign") == 0) {
@@ -495,8 +576,7 @@ class _MyAppState extends State<MyApp> {
                     fontSize: 18),
               ),
               onPressed: () {
-                if (Comparable.compare(k, "_alias") == 0 ||
-                    Comparable.compare(k, "_track") == 0 ||
+                if (Comparable.compare(k, "_track") == 0 ||
                     Comparable.compare(k, "_pageView") == 0 ||
                     Comparable.compare(k, "_registerSuperProperty") == 0 ||
                     Comparable.compare(k, "_trackCampaign") == 0) {
