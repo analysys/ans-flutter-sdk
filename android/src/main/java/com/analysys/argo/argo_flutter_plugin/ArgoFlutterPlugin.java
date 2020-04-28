@@ -56,6 +56,7 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
 
             switch (call.method) {
                 case "init":
+                    //dart 中已经删除这个接口，由两边代码分别初始化
                     this.init(context, call.arguments);
                     break;
                 case "set_debug_mode":
@@ -112,6 +113,9 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
                 case "launchSource":
                     this.launchSource(context, call.arguments);
                     break;
+                case "setAutomaticCollection":
+                    this.setAutomaticCollection(context, call.arguments);
+                    break;
                 case "register_super_property":
                     this.registerSuperProperty(context, call.arguments);
                     break;
@@ -163,6 +167,10 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
         result.success(callbackObject);
     }
 
+    private void setAutomaticCollection(Context context, Object arguments) {
+        AnalysysAgent.setAutomaticCollection(context,(Boolean) arguments);
+    }
+
     private void setUploadNetworkType(Context context, Object arguments) {
         AnalysysAgent.setUploadNetworkType((Integer) arguments);
     }
@@ -177,6 +185,10 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
 
     private void printAges(MethodCall call) {
         String methodName = call.method;
+        if (call.arguments == null) {
+            Log.e(TAG, " \n[methodName]" + methodName + "\n");
+            return;
+        }
         String ageType = call.arguments.getClass().getName();
         String ageValue = null;
         if (call.arguments instanceof Map) {
@@ -199,6 +211,10 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
         AnalysysAgent.launchSource(source);
     }
 
+    /**
+     * 此接口已经启弃用，由两边接口自己定义初始化相关代码
+     */
+    @Deprecated
     private void init(Context context, Object params) {
         if (!isValidateMap(params)) {
             Log.e(TAG, "init arguments error!!!");

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:argo_flutter_plugin/AnalysysConfig.dart';
+
 import 'package:flutter/services.dart';
 
 class AnalysysAgent {
@@ -9,23 +9,7 @@ class AnalysysAgent {
 
   //****************************** 易观SDK初始化设置 *********************************//
 
-  ///  配置SDK
-  /// 
-  /// ```dart
-  /// AnalysysConfig config = new AnalysysConfig();
-  /// config.appKey = 'heatmaptest0916';
-  /// config.channel = "App Store";
-  /// ....
-  /// AnalysysAgent.startWithConfig(config)
-  /// ```
-  static Future<void> startWithConfig(AnalysysConfig config) {
-    try {
-      return _channel.invokeMethod('startWithConfig', config.toMap());
-    } catch (e) {
-      print("init error with exception:" + e.toString());
-    }
-    return null;
-  }
+
 
   //****************************** 服务器地址设置 *********************************//
 
@@ -506,7 +490,7 @@ class AnalysysAgent {
   /// ```dart
   /// var presetProperties = AnalysysAgent.getPresetProperties();
   /// ```
-  static Future<Map<String, Object>> getPresetProperties() async {
+  static Future<Map<dynamic, dynamic>> getPresetProperties() async {
     return await _channel.invokeMethod('getPresetProperties');
   }
 

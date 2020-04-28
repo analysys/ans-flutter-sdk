@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:argo_flutter_plugin/AnalysysAgent.dart';
-import 'package:argo_flutter_plugin/AnalysysConfig.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(App());
@@ -28,8 +27,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
-        title: 'Argo Flutter Plugin example app', 
-        home: MyApp());
+        title: 'Argo Flutter Plugin example app', home: MyApp());
   }
 }
 
@@ -43,8 +41,8 @@ class _MyAppState extends State<MyApp> {
 
   _MyAppState() {
     _methodList = {
-      "_configSDK": FuncTextController(new TextEditingController(), "appkey",
-          callback: _initMethod),
+      "_testAll": FuncTextController(new TextEditingController(), "testAll",
+          callback: _testAll),
       "_setDebugMode": FuncTextController(
           new TextEditingController(), "debugMode",
           callback: _setDebugMode),
@@ -65,8 +63,9 @@ class _MyAppState extends State<MyApp> {
           callback: _setMaxEventSize),
       "_flush":
           FuncTextController(new TextEditingController(), "", callback: _flush),
-      "_setUploadNetworkType":
-          FuncTextController(new TextEditingController(), "", callback: _setUploadNetworkType),
+      "_setUploadNetworkType": FuncTextController(
+          new TextEditingController(), "",
+          callback: _setUploadNetworkType),
       "_alias": FuncTextController(new TextEditingController(), "aliasId",
           callback: _alias),
       "_identify": FuncTextController(new TextEditingController(), "distinctId",
@@ -133,75 +132,53 @@ class _MyAppState extends State<MyApp> {
     super.initState();
   }
 
-  void _initMethod(TextEditingController controller) {
-    try {
-      // if(controller.text.length == 0) {
-      //   print("请填写appkey!");
-      //   return;
-      // }
-      AnalysysConfig config = new AnalysysConfig();
-      // config.appKey = controller.text;
-      config.appKey = 'heatmaptest0916';
-      config.channel = "App Store";
-      config.autoProfile = false;
-      config.autoInstallation = true;
-      config.autoTrackDeviceId = true;
-      config.encryptType = 1;
-      config.autoInstallation = true;
-      config.allowTimeCheck = true;
-      config.maxDiffTimeInterval = 5 * 60;
-      AnalysysAgent.startWithConfig(config)
-          ?.whenComplete(() => _showDialog("init success!"));
+  void _testAll(TextEditingController controller) {
+    AnalysysAgent.setAutomaticCollection(true);
+    AnalysysAgent.setIntervalTime(10);
+    AnalysysAgent.setMaxEventSize(10);
+    AnalysysAgent.setMaxCacheSize(1000);
 
-      AnalysysAgent.setDebugMode(2);
-      AnalysysAgent.setUploadUrl('http://192.168.220.105:8089');
-    } catch (e) {
-      print("_initMethod error with exception:" + e.toString());
-    }
+    AnalysysAgent.identify("fangke");
+    var distinctID = AnalysysAgent.getDistinctId();
+    print("distinctID:" + distinctID.toString());
+
+    AnalysysAgent.getDistinctId().then((userId) {
+      print("user " + userId);
+    });
+
+    AnalysysAgent.alias("18899668899");
+
+    var presetProperties = AnalysysAgent.getPresetProperties();
+    presetProperties.then((onValue) {
+      print("presetProperties:" + onValue.toString());
+    });
+
+    AnalysysAgent.reset();
+    AnalysysAgent.cleanDBCache();
+
+    AnalysysAgent.setUploadNetworkType(0xFF);
+
+    AnalysysAgent.flush();
+
+    AnalysysAgent.registerSuperProperty("gender", "male");
+    AnalysysAgent.registerSuperProperties({"age": 30, "address": "beijing"});
+    AnalysysAgent.unRegisterSuperProperty("age");
+    AnalysysAgent.clearSuperProperties();
+
+    AnalysysAgent.profileSet({"hobby": "playfootball"});
+    AnalysysAgent.profileSetOnce({"birthday": "1997-7-1"});
+    AnalysysAgent.profileIncrement({"积分": 99});
+    AnalysysAgent.profileAppend({
+      "books": ["红楼梦", "水浒传"]
+    });
+    AnalysysAgent.profileUnset("birthday");
+    AnalysysAgent.profileDelete();
   }
 
   void _setDebugMode(TextEditingController controller) {
     try {
-      // AnalysysAgent.setDebugMode(int.parse(controller.text))
-          // ?.whenComplete(() => _showDialog("debugMode success!"));
-
-      // AnalysysAgent.setAutomaticCollection(true);
-      // AnalysysAgent.setIntervalTime(10);
-      // AnalysysAgent.setMaxEventSize(10);
-      // AnalysysAgent.setMaxCacheSize(1000);
-
-      // AnalysysAgent.identify("fangke");
-      // var distinctID = AnalysysAgent.getDistinctId();
-      // print("distinctID:" + distinctID.toString());
-
-      // AnalysysAgent.getDistinctId().then((userId){
-      //   print("user " + userId);
-      // });
-
-      // AnalysysAgent.alias("18899668899");
-
-      // var presetProperties = AnalysysAgent.getPresetProperties();
-      // print("presetProperties:" + presetProperties.toString());
-    
-      // AnalysysAgent.reset();
-      // AnalysysAgent.cleanDBCache();
-
-      // AnalysysAgent.setUploadNetworkType(0xFF);
-
-      // AnalysysAgent.flush();
-
-      // AnalysysAgent.registerSuperProperty("gender", "male");
-      // AnalysysAgent.registerSuperProperties({"age":30, "address":"beijing"});
-      // AnalysysAgent.unRegisterSuperProperty("age");
-      // AnalysysAgent.clearSuperProperties();
-
-      // AnalysysAgent.profileSet({"hobby": "playfootball"});
-      // AnalysysAgent.profileSetOnce({"birthday": "1997-7-1"});
-      // AnalysysAgent.profileIncrement({"积分": 99});
-      // AnalysysAgent.profileAppend({"books": ["红楼梦", "水浒传"]});
-      // AnalysysAgent.profileUnset("birthday");
-      // AnalysysAgent.profileDelete();
-
+      AnalysysAgent.setDebugMode(int.parse(controller.text))
+          ?.whenComplete(() => _showDialog("debugMode success!"));
     } catch (e) {
       print("setDebugMode error with exception:" + e.toString());
     }
@@ -209,16 +186,8 @@ class _MyAppState extends State<MyApp> {
 
   void _setUploadUrl(TextEditingController controller) {
     try {
-      // AnalysysAgent.setUploadUrl(controller.text)?.whenComplete(
-      //     () => _showDialog('setUploadUrl success! ' + controller.text));
-      // AnalysysAgent.setUploadUrl("https://arkpaastest.analysys.cn:4089");
-
-      // var superProperties = AnalysysAgent.getSuperProperties();
-      // var value = AnalysysAgent.getSuperProperty("address");
-      // print("value:" + value.toString());
-
-      // AnalysysAgent.pageView("homePage");
-      AnalysysAgent.pageView("detailPage", {"detail":"详情页"});
+      AnalysysAgent.setUploadUrl(controller.text)?.whenComplete(
+          () => _showDialog('setUploadUrl success! ' + controller.text));
     } catch (e) {
       print("setUploadUrl error with exception:" + e.toString());
     }
@@ -328,10 +297,10 @@ class _MyAppState extends State<MyApp> {
       // AnalysysAgent.track(controller.text,
       //     eventInfo: json.decode(controller2.text));
 
-        AnalysysAgent.track("event");
+      AnalysysAgent.track("event");
 
-        Map<String, Object> properties = {"eventKey": "eventValue"};
-        AnalysysAgent.track("eventProperties", properties);
+      Map<String, Object> properties = {"eventKey": "eventValue"};
+      AnalysysAgent.track("eventProperties", properties);
     } catch (e) {
       print("track error with exception:" + e);
     }
@@ -340,12 +309,12 @@ class _MyAppState extends State<MyApp> {
   void _pageView(TextEditingController controller,
       {TextEditingController controller2}) {
     try {
-    //   _showDialog("pageView pageName:" +
-    //       controller.text +
-    //       "pageInfo:" +
-    //       controller2.text);
-    //   AnalysysAgent.pageView(controller.text,
-    //       pageInfo: json.decode(controller2.text));
+      //   _showDialog("pageView pageName:" +
+      //       controller.text +
+      //       "pageInfo:" +
+      //       controller2.text);
+      //   AnalysysAgent.pageView(controller.text,
+      //       pageInfo: json.decode(controller2.text));
       AnalysysAgent.pageView("pageHome");
 
       Map<String, Object> properties = {"pageKey": "pageValue"};
