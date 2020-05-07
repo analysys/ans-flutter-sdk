@@ -82,59 +82,8 @@ static bool isNumberType(id param) {
     }
 }
 
-//****************************** 易观SDK初始化设置 *********************************//
--(void)startWithConfig:(id)params {
-    if (!isValidateMapKey(params)) {
-        NSLog(@"init arguments error!!!");
-        return;
-    }
-    NSDictionary *mapParams = (NSDictionary *)params;
-    if (isStringType(mapParams[@"appKey"])) {
-        AnalysysConfig.appKey = (NSString *)mapParams[@"appKey"];
-    }
-    if (isStringType(mapParams[@"channel"])) {
-        AnalysysConfig.channel = (NSString *)mapParams[@"channel"];
-    }
-    
-    if(isNumberType(mapParams[@"encryptType"])) {
-        AnalysysConfig.encryptType = mapParams[@"encryptType"];
-    }
-    
-    if(isNumberType(mapParams[@"autoProfile"])) {
-        AnalysysConfig.autoProfile = mapParams[@"autoProfile"];
-    }
-    if(isNumberType(mapParams[@"autoInstallation"])) {
-        AnalysysConfig.autoProfile = mapParams[@"autoInstallation"];
-    }
-    if(isNumberType(mapParams[@"autoTrackDeviceId"])) {
-        AnalysysConfig.autoTrackDeviceId = mapParams[@"autoTrackDeviceId"];
-    }
-
-    if(isNumberType(mapParams[@"allowTimeCheck"])) {
-        AnalysysConfig.autoTrackDeviceId = mapParams[@"allowTimeCheck"];
-    }
-    if(isNumberType(mapParams[@"maxDiffTimeInterval"])) {
-        AnalysysConfig.autoTrackDeviceId = mapParams[@"maxDiffTimeInterval"];
-    }
-    
-    [AnalysysAgent startWithConfig:AnalysysConfig];
-}
-
-//****************************** 服务器地址设置 *********************************//
-
--(void)set_upload_url:(id)params {
-    if (isStringType(params)) {
-        [AnalysysAgent setUploadURL:(NSString *)params];
-    }
-}
 
 //****************************** SDK发送策略 *********************************//
-
--(void)set_debug_mode:(id)params {
-    if (isNumberType(params)) {
-        [AnalysysAgent setDebugMode:((NSNumber *)params).intValue];
-    }
-}
 
 -(void)set_interval_time:(id)params {
     if (isNumberType(params)) {
@@ -278,6 +227,8 @@ static bool isNumberType(id param) {
     return [AnalysysAgent getPresetProperties];
 }
 
+//****************************** 用户相关 *********************************//
+
 -(void)profile_set:(id)params {
     if (!isValidateMapKey(params)) {
         return;
@@ -331,22 +282,5 @@ static bool isNumberType(id param) {
 -(void)profile_delete:(id) params{
     [AnalysysAgent profileDelete];
 }
-
-// -(void)track_campaign:(id) params{
-//     if (!isValidateMapKey(params)) {
-//         return;
-//     }
-//     NSDictionary * mapParams = (NSDictionary *)params;
-//     NSString *campaign = mapParams[@"campaign"];
-//     bool isClick = false;
-//     if (!isStringType(campaign)) {
-//         return;
-//     }
-//     if (!isNumberType(mapParams[@"is_click"])) {
-//         return;
-//     } 
-//     isClick = mapParams[@"is_click"];
-//     [AnalysysAgent trackCampaign:campaign isClick:isClick];
-// }
 
 @end
