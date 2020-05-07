@@ -17,6 +17,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
 #if DEBUG
     [AnalysysAgent setDebugMode:AnalysysDebugButTrack];
+#else
+    [AnalysysAgent setDebugMode:AnalysysDebugOff];
 #endif
     [AnalysysAgent setUploadURL:@"http://192.168.220.105:8089"];
     

@@ -7,48 +7,6 @@ class AnalysysAgent {
   static const MethodChannel _channel =
       const MethodChannel('argo_flutter_plugin');
 
-  //****************************** 易观SDK初始化设置 *********************************//
-
-
-
-  //****************************** 服务器地址设置 *********************************//
-
-  ///  设置上传数据地址
-  /// 
-  /// ```dart
-  /// [url] 格式：http://host:port 或 https://host:port
-  /// AnalysysAgent.setUploadUrl('http://192.168.220.105:8089');
-  /// ```
-  static Future<void> setUploadUrl(String url) {
-    try {
-      return _channel.invokeMethod('set_upload_url', url);
-    } catch (e) {
-      print("setUploadUrl error with exception:" + e.toString());
-    }
-    return null;
-  }
-
-  //****************************** SDK发送策略 *********************************//
-
-  ///  设置调试模式
-  /// 
-  /// [mode]说明：
-  ///  0 关闭Debug模式 上线时设置
-  ///  1 打开Debug模式，但该模式下发送的数据仅用于调试，不进行数据导入
-  ///  2 打开Debug模式，并入库计算
-  /// 
-  /// ```dart
-  /// AnalysysAgent.setDebugMode(2);
-  /// ```
-  static Future<void> setDebugMode(int mode) {
-    try {
-      return _channel.invokeMethod('set_debug_mode', mode);
-    } catch (e) {
-      print("setDebugMode error with exception:" + e.toString());
-    }
-    return null;
-  }
-
   ///  设置上传间隔时间
   /// 
   /// [interval]说明：单位：秒，仅 setDebugMode = 0 时生效
