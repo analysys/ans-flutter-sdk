@@ -40,7 +40,7 @@ class SDKDemoList extends State<DemoApp> {
 
   String _distinctId = '';
 
-Future<void> getDistinctId() async {
+  Future<void> getDistinctId() async {
     String distinctId;
     distinctId = await AnalysysAgent.getDistinctId();
     setState(() {
@@ -51,7 +51,8 @@ Future<void> getDistinctId() async {
   Widget _functionList() {
     return new ListView(children: <Widget>[
       ListTile(
-        title: Text('distinctid:\n' + (_distinctId.length > 0 ? _distinctId : '点击获取匿名标识')),
+        title: Text('distinctid:\n' +
+            (_distinctId.length > 0 ? _distinctId : '点击获取匿名标识')),
         onTap: () {
           getDistinctId();
         },
@@ -108,7 +109,18 @@ Future<void> getDistinctId() async {
         },
       ),
       Divider(color: Colors.grey,),
-      
+      ListTile(
+        title: Text('自定义测试代码'),
+        onTap: () {
+          test();
+        },
+      ),
+      Divider(color: Colors.grey,),
+
     ]);
+  }
+
+  void test() {
+    //todo 其他测试代码可放在此处
   }
 }
