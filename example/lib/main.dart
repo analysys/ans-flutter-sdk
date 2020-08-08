@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:argo_flutter_plugin/AnalysysAgent.dart';
+import 'package:argo_flutter_plugin/argo_flutter_plugin.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
