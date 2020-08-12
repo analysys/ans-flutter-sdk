@@ -168,7 +168,7 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
     }
 
     private void setAutomaticCollection(Context context, Object arguments) {
-        AnalysysAgent.setAutomaticCollection(context,(Boolean) arguments);
+        AnalysysAgent.setAutomaticCollection(context, (Boolean) arguments);
     }
 
     private void setUploadNetworkType(Context context, Object arguments) {
@@ -307,14 +307,21 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
 
     private void alias(Context context, Object params) {/* String aliasId, String originalId */
         Log.d(TAG, "alias method call from java");
-        if (!isValidateMap(params)) {
-            Log.e(TAG, "arguments error!!!");
+        if (isStringType(params)) {
+            String alias_id = (String) params;
+            AnalysysAgent.alias(context, alias_id);
+        }
+        if (isValidateMap(params)) {
+            Map mapParams = (Map) params;
+            if (isStringType(mapParams.get("alias_id")) && isStringType(mapParams.get("original_id"))) {
+                AnalysysAgent.alias(context, (String) mapParams.get("alias_id"), (String) mapParams.get("original_id"));
+            }
             return;
+        }else {
+            Log.e(TAG, "arguments error!!!");
         }
-        Map mapParams = (Map) params;
-        if (isStringType(mapParams.get("alias_id")) && isStringType(mapParams.get("original_id"))) {
-            AnalysysAgent.alias(context, (String) mapParams.get("alias_id"), (String) mapParams.get("original_id"));
-        }
+
+
     }
 
     private void identify(Context context, Object params) {
