@@ -1,8 +1,7 @@
 name: argo_flutter_plugin
 description: Argo Flutter plugin.
-version: 0.0.1
-author:
-homepage:
+version: 4.3.0
+homepage: https://docs.analysys.cn/
 
 environment:
   sdk: ">=2.1.0 <3.0.0"

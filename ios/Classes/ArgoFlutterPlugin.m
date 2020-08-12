@@ -2,7 +2,7 @@
 #import <AnalysysAgent/AnalysysAgent.h>
 #import <objc/runtime.h>
 
-static bool isStringType (id param) {
+static bool isStringType(id param) {
     if (param == nil || ![param isKindOfClass:NSString.class]) {
         return false;
     }
@@ -13,7 +13,7 @@ static bool isStringType (id param) {
     return true;
 }
 
-static bool isValidateMap (id param,Class cls) {
+static bool isValidateMap(id param,Class cls) {
     if (param == nil || ![param isKindOfClass:NSDictionary.class]) {
         return false;
     }
@@ -35,11 +35,11 @@ static bool isValidateMap (id param,Class cls) {
     return true;
 }
 
-static bool isValidateMapKey (id param) {
-    return isValidateMap (param,nil);
+static bool isValidateMapKey(id param) {
+    return isValidateMap(param,nil);
 }
 
-static bool isNumberType (id param) {
+static bool isNumberType(id param) {
     if (param == nil || ![param isKindOfClass:NSNumber.class]) {
         return false;
     }
@@ -49,16 +49,17 @@ static bool isNumberType (id param) {
 @implementation ArgoFlutterPlugin
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  FlutterMethodChannel* channel = [FlutterMethodChannel
+  FlutterMethodChannel *channel = [FlutterMethodChannel
       methodChannelWithName:@"argo_flutter_plugin"
             binaryMessenger:[registrar messenger]];
-  ArgoFlutterPlugin* instance = [[ArgoFlutterPlugin alloc] init];
+  ArgoFlutterPlugin *instance = [[ArgoFlutterPlugin alloc] init];
   [registrar addMethodCallDelegate:instance channel:channel];
 }
 
 - (void)handleMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
     @try {
         if ([self respondsToSelector:NSSelectorFromString([NSString stringWithFormat:@"%@:",call.method])]) {
+            //NSLog(@"call.method******** %@", call.method);
             SEL calledSEL = NSSelectorFromString([NSString stringWithFormat:@"%@:",call.method]);
             if (calledSEL) {
                 Method calledMethod = class_getInstanceMethod(self.class, calledSEL);
@@ -67,13 +68,13 @@ static bool isNumberType (id param) {
                     if (numArgs == 3) {
                         if ([call.method hasPrefix:@"get_"]) {
                             result (((id (*)(id, SEL,id)) method_getImplementation(calledMethod))(self, calledSEL,call.arguments));
-                        }else {
+                        } else {
                             ((void (*)(id, SEL,id)) method_getImplementation(calledMethod))(self, calledSEL,call.arguments);
                         }
                     }
                 }
             }
-        }else {
+        } else {
             result(FlutterMethodNotImplemented);
         }
     } @catch (NSException *exception) {
@@ -82,243 +83,193 @@ static bool isNumberType (id param) {
 }
 
 
+//****************************** SDK发送策略 *********************************//
 
--(void)init:(id) params{
-    if (!isValidateMapKey(params)) {
-        NSLog(@"init arguments error!!!");
-        return;
-    }
-    NSDictionary * mapParams = (NSDictionary *)params;
-    if (isStringType(mapParams[@"channel"])) {
-        AnalysysConfig.channel = (NSString *)mapParams[@"channel"];
-    }
-    if (isStringType(mapParams[@"base_url"])) {
-        AnalysysConfig.baseUrl = (NSString *)mapParams[@"base_url"];
-    }
-    if (isStringType(mapParams[@"app_key"])) {
-        AnalysysConfig.appKey = (NSString *)mapParams[@"app_key"];
-    }
-    AnalysysConfig.autoProfile = false;
-    AnalysysConfig.autoInstallation = false;
-    [AnalysysAgent setAutomaticHeatmap:false];
-    [AnalysysAgent setAutomaticCollection:false];
-    [AnalysysAgent startWithConfig:AnalysysConfig];
-}
-
--(void)set_debug_mode:(id) params{
-    if (isNumberType(params)) {
-        [AnalysysAgent setDebugMode:((NSNumber *)params).intValue];
-    }
-}
-
--(void)set_upload_url:(id) params{
-    if (isStringType(params)) {
-        [AnalysysAgent setUploadURL:(NSString *)params];
-    }
-}
-
--(void)set_interval_time:(id) params{
+-(void)set_interval_time:(id)params {
     if (isNumberType(params)) {
         [AnalysysAgent setIntervalTime:((NSNumber *)params).integerValue];
     }
 }
 
--(void)set_max_cache_size:(id) params{
+-(void)set_max_cache_size:(id)params {
     if (isNumberType(params)) {
         [AnalysysAgent setMaxCacheSize:((NSNumber *)params).integerValue];
     }
 }
 
--(id)get_max_cache_size:(id) params{
+-(id)get_max_cache_size:(id)params {
     return @(AnalysysAgent.maxCacheSize);
 }
 
--(void)set_max_event_size:(id) params{
+-(void)set_max_event_size:(id)params {
     if (isNumberType(params)) {
         [AnalysysAgent setMaxEventSize:((NSNumber *)params).integerValue];
     }
 }
 
--(void)flush:(id) params{
+-(void)flush:(id)params {
     [AnalysysAgent flush];
 }
 
--(void)alias:(id) params{
+- (void)setUploadNetworkType:(id)params {
+    if (isNumberType(params)) {
+        [AnalysysAgent setUploadNetworkType:((NSNumber *)params).integerValue];
+    }
+}
+
+- (void)cleanDBCache:(id)parames {
+    [AnalysysAgent cleanDBCache];
+}
+
+- (void)setAutomaticCollection:(id)param {
+    if (isNumberType(param)) {
+        [AnalysysAgent setAutomaticCollection:param];
+    }
+}
+
+//****************************** 事件 *********************************//
+
+-(void)track:(id)params {
     if (!isValidateMapKey(params)) {
         return;
     }
-    NSDictionary * mapParams = (NSDictionary *)params;
-    NSString *aliasId = nil;
-    NSString *originalId = nil;
-    if (isStringType(mapParams[@"alias_id"])) {
-        aliasId = (NSString *)mapParams[@"alias_id"];
+    NSDictionary *mapParams = (NSDictionary *)params;
+    NSString *eventName = mapParams[@"event_name"];
+    NSDictionary *properties = mapParams[@"event_info"];
+    if (isStringType(eventName)) {
+        [AnalysysAgent track:eventName properties:(isValidateMapKey(properties) ? (NSDictionary *)properties : nil)];
+    }   
+}
+
+-(void)pageview:(id)params {
+    if (!isValidateMapKey(params)) {
+        return;
     }
-    if (isStringType(mapParams[@"original_id"])) {
-        originalId = (NSString *)mapParams[@"original_id"];
-    }
-    if (aliasId != nil && originalId != nil) {
-        [AnalysysAgent alias:aliasId originalId:originalId];
+    NSDictionary *mapParams = (NSDictionary *)params;
+    NSString *pageName = mapParams[@"page_name"];
+    NSDictionary *properties = mapParams[@"page_detail"];
+    if (isStringType(pageName)) {
+        [AnalysysAgent pageView:pageName properties:(isValidateMapKey(properties) ? (NSDictionary *)properties : nil)];
     }
 }
 
--(void)identify:(id) params{
-    if (isStringType(params)) {
-        [AnalysysAgent identify:(NSString *)params];
+//****************************** 用户属性 *********************************//
+
+-(void)alias:(id)aliasId {
+    if (!isStringType(aliasId)) {
+        return;
+    }
+    [AnalysysAgent alias:aliasId originalId:nil];
+}
+
+-(void)identify:(id)anonymousId {
+    if (isStringType(anonymousId)) {
+        [AnalysysAgent identify:anonymousId];
     }
 }
 
--(id)get_distinct_id:(id) params{
-    return [AnalysysAgent getDistinctId];
+-(id)get_distinct_id:(id)params{
+    NSString *distinctID = [AnalysysAgent getDistinctId];
+    return distinctID;
 }
 
 -(void)reset:(id) params{
     [AnalysysAgent reset];
 }
 
--(void)track:(id) params{
+//****************************** 通用属性 *********************************//
+
+-(void)register_super_property:(id)params {
     if (!isValidateMapKey(params)) {
         return;
     }
-    NSDictionary * mapParams = (NSDictionary *)params;
-    NSString *name = nil;
-    NSDictionary *info = nil;
-    if (isStringType(mapParams[@"event_name"])) {
-        name = (NSString *)mapParams[@"event_name"];
-    }
-    if (isValidateMapKey(mapParams[@"event_info"])) {
-        info = (NSDictionary *)mapParams[@"event_info"];
-    }
-    if (name != nil && info != nil) {
-        [AnalysysAgent track:name properties:info];
-    }else if (name != nil) {
-        [AnalysysAgent track:name];
+    NSDictionary *mapParams = (NSDictionary *)params;
+    NSString *propertyName = mapParams[@"property_name"];
+    id value = mapParams[@"property_value"];
+    if (isStringType(propertyName) && value != nil) {
+        [AnalysysAgent registerSuperProperty:propertyName value:value];
     }
 }
 
--(void)pageview:(id) params{
+-(void)register_super_properties:(id)params {
     if (!isValidateMapKey(params)) {
         return;
     }
-    NSDictionary * mapParams = (NSDictionary *)params;
-    NSString *name = nil;
-    NSDictionary *info = nil;
-    if (isStringType(mapParams[@"page_name"])) {
-        name = (NSString *)mapParams[@"page_name"];
-    }
-    if (isValidateMapKey(mapParams[@"page_detail"])) {
-        info = (NSDictionary *)mapParams[@"page_detail"];
-    }
-    if (name != nil && info != nil) {
-        [AnalysysAgent pageView:name properties:info];
-    }else if (name != nil) {
-        [AnalysysAgent pageView:name];
+    NSDictionary *mapParams = (NSDictionary *)params;
+    NSDictionary *properties = mapParams[@"properties"];
+    if (isValidateMapKey(properties)) {
+        [AnalysysAgent registerSuperProperties:properties];
     }
 }
 
--(void)register_super_property:(id) params{
-    if (!isValidateMapKey(params)) {
-        return;
-    }
-    NSDictionary * mapParams = (NSDictionary *)params;
-    NSString *name = nil;
-    id        info = nil;
-    if (isStringType(mapParams[@"property_name"])) {
-        name = (NSString *)mapParams[@"property_name"];
-    }
-    info = mapParams[@"property_value"];
-    if (name != nil && info != nil) {
-        [AnalysysAgent registerSuperProperty:name value:info];
-    }
-}
-
--(void)register_super_properties:(id) params{
-    if (!isValidateMapKey(params)) {
-        return;
-    }
-    NSDictionary * mapParams = (NSDictionary *)params;
-    NSDictionary *info = nil;
-    if (isValidateMapKey(mapParams[@"properties"])) {
-        info = (NSDictionary *)mapParams[@"properties"];
-    }
-    if (info != nil) {
-        [AnalysysAgent registerSuperProperties:info];
-    }
-}
-
--(void)unregister_super_property:(id) params{
+-(void)unregister_super_property:(id)params {
     if (isStringType(params)) {
         [AnalysysAgent unRegisterSuperProperty:(NSString *)params];
     }
 }
 
--(void)clear_super_properties:(id) params{
+-(void)clear_super_properties:(id)params {
     [AnalysysAgent clearSuperProperties];
 }
 
--(id)get_super_property:(id) params{
+-(id)get_super_property:(id)params {
     if (isStringType(params)) {
         return [AnalysysAgent getSuperProperty:(NSString *)params];
     }
     return nil;
 }
 
--(id)get_super_properties:(id) params{
+-(id)get_super_properties:(id)params {
     return [AnalysysAgent getSuperProperties];
 }
 
--(void)profile_set:(id) params{
+-(id)getPresetProperties:(id)params {
+    return [AnalysysAgent getPresetProperties];
+}
+
+//****************************** 用户相关 *********************************//
+
+-(void)profile_set:(id)params {
     if (!isValidateMapKey(params)) {
         return;
     }
-    NSDictionary * mapParams = (NSDictionary *)params;
-    NSDictionary *info = nil;
-    if (isValidateMapKey(mapParams[@"properties"])) {
-        info = (NSDictionary *)mapParams[@"properties"];
-    }
-    if (info != nil) {
-        [AnalysysAgent profileSet:info];
+    NSDictionary *mapParams = (NSDictionary *)params;
+    NSDictionary *properties = mapParams[@"properties"];
+    if (isValidateMapKey(properties)) {
+        [AnalysysAgent profileSet:properties];
     }
 }
 
--(void)profile_set_once:(id) params{
+-(void)profile_set_once:(id)params {
     if (!isValidateMapKey(params)) {
         return;
     }
-    NSDictionary * mapParams = (NSDictionary *)params;
-    NSDictionary *info = nil;
-    if (isValidateMapKey(mapParams[@"properties"])) {
-        info = (NSDictionary *)mapParams[@"properties"];
-    }
-    if (info != nil) {
-        [AnalysysAgent profileSetOnce:info];
+    NSDictionary *mapParams = (NSDictionary *)params;
+    NSDictionary *properties = mapParams[@"properties"];
+    if (isValidateMapKey(properties)) {
+        [AnalysysAgent profileSetOnce:properties];
     }
 }
 
--(void)profile_increment:(id) params{
+-(void)profile_increment:(id)params {
     if (!isValidateMapKey(params)) {
         return;
     }
-    NSDictionary * mapParams = (NSDictionary *)params;
-    NSDictionary *info = nil;
-    if (isValidateMap(mapParams[@"properties"],NSNumber.class)) {
-        info = (NSDictionary *)mapParams[@"properties"];
-    }
-    if (info != nil) {
-        [AnalysysAgent profileIncrement:info];
+    NSDictionary *mapParams = (NSDictionary *)params;
+    NSDictionary *properties = mapParams[@"properties"];
+    if (isValidateMap(properties, NSNumber.class)) {
+        [AnalysysAgent profileIncrement:properties];
     }
 }
 
--(void)profile_append:(id) params{
+-(void)profile_append:(id)params {
     if (!isValidateMapKey(params)) {
         return;
     }
-    NSDictionary * mapParams = (NSDictionary *)params;
-    NSDictionary *info = nil;
-    if (isValidateMapKey(mapParams[@"properties"])) {
-        info = (NSDictionary *)mapParams[@"properties"];
-    }
-    if (info != nil) {
-        [AnalysysAgent profileAppend:info];
+    NSDictionary *mapParams = (NSDictionary *)params;
+    NSDictionary *properties = mapParams[@"properties"];
+    if (isValidateMap(properties, NSArray.class)) {
+        [AnalysysAgent profileAppend:properties];
     }
 }
 
@@ -330,26 +281,6 @@ static bool isNumberType (id param) {
 
 -(void)profile_delete:(id) params{
     [AnalysysAgent profileDelete];
-}
-
--(void)track_campaign:(id) params{
-    if (!isValidateMapKey(params)) {
-        return;
-    }
-    NSDictionary * mapParams = (NSDictionary *)params;
-    NSString *campaign = nil;
-    bool isClick = false;
-    if (isStringType(mapParams[@"campaign"])) {
-        campaign = (NSString *)mapParams[@"campaign"];
-    }
-    if (isNumberType(mapParams[@"is_click"])) {
-        isClick = (NSString *)mapParams[@"is_click"];
-    }else {
-        return;
-    }
-    if (campaign != nil) {
-        [AnalysysAgent trackCampaign:campaign isClick:isClick];
-    }
 }
 
 @end
