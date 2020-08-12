@@ -61,14 +61,14 @@ class SDKDemoList extends State<DemoApp> {
       ListTile(
         title: Text('track事件'),
         onTap: () {
-          AnalysysAgent.track('purchase');
+          AnalysysAgent.track('purchase',{'hello': 'ddd'});
         },
       ),
       Divider(color: Colors.grey,),
       ListTile(
         title: Text('pageView事件'),
         onTap: () {
-          AnalysysAgent.pageView('HomePage');
+          AnalysysAgent.pageView('HomePage',{'pagename': 'hello'});
         },
       ),
       Divider(color: Colors.grey,),

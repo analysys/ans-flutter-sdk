@@ -310,6 +310,7 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
         if (isStringType(params)) {
             String alias_id = (String) params;
             AnalysysAgent.alias(context, alias_id);
+            return;
         }
         if (isValidateMap(params)) {
             Map mapParams = (Map) params;
