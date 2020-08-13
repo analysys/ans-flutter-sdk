@@ -23,6 +23,4 @@ samples, guidance on mobile development, and a full API reference.
 
 ## 鸣谢
 
-该版本SDK来源于社区小伙伴贡献.
-
  * [qshbbcs](https://github.com/qshbbcs/argo-sdk-flutter)
