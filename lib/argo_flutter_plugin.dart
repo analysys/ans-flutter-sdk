@@ -176,6 +176,30 @@ class AnalysysAgent {
     return null;
   }
 
+  ///  页面信息 pageInfo 可选
+  ///
+  /// ```dart
+  /// Map<String, Object> properties = {"pageKey": "pageValue"};
+  /// AnalysysAgent.pageView("pageDetail", properties);
+  /// ```
+  static Future<void> pageClose(String pageName, [Map<String, Object> pageInfo]) {
+    try {
+      if (pageName == null) {
+        print("pageClose pageName can not be null!");
+        return null;
+      }
+      Map<String, Object> params = {};
+      params['\$title'] = pageName;
+      if (pageInfo != null) {
+        params.addAll(pageInfo);
+      }
+      return track("page_close", params);
+    } catch (e) {
+      print("pageClose error with exception:" + e.toString());
+    }
+    return null;
+  }
+
   // static Future<void> reportException(String exception) {
   //   try {
   //     return _channel.invokeMethod('reportException', exception);

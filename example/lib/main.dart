@@ -68,7 +68,14 @@ class SDKDemoList extends State<DemoApp> {
       ListTile(
         title: Text('pageView事件'),
         onTap: () {
-          AnalysysAgent.pageView('HomePage',{'pagename': 'hello'});
+          AnalysysAgent.pageView('HomePage Title',{'\$url': 'HomePage Url'});
+        },
+      ),
+      Divider(color: Colors.grey,),
+      ListTile(
+        title: Text('pageClose事件'),
+        onTap: () {
+          AnalysysAgent.pageClose('HomePage Title',{'\$url': 'HomePage Url'});
         },
       ),
       Divider(color: Colors.grey,),

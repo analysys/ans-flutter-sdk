@@ -15,6 +15,7 @@ public class App extends FlutterApplication {
     public void onCreate() {
         super.onCreate();
         //初始化方舟SDK
+        AnalysysAgent.setDebugMode(this, 2);
         AnalysysConfig config = new AnalysysConfig();
         // 设置key(目前使用电商demo的key)
         config.setAppKey("your_analysys_appkey");

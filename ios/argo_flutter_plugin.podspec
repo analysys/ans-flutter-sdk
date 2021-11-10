@@ -15,7 +15,7 @@ Argo Flutter plugin.
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'AnalysysAgent', '~> 4.4.5'
-  s.ios.deployment_target = '8.0'
+  s.dependency 'AnalysysAgent', '~> 4.5.15'
+  s.ios.deployment_target = '9.0'
 end
 
