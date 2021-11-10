@@ -2,8 +2,8 @@
 # To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html
 #
 Pod::Spec.new do |s|
-  s.name             = 'argo_flutter_plugin'
-  s.version          = '1.0.0'
+  s.name             = 'analysys_flutter_plugin'
+  s.version          = '4.3.2'
   s.summary          = 'Argo Flutter plugin.'
   s.description      = <<-DESC
 Argo Flutter plugin.

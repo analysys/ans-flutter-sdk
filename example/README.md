@@ -1,6 +1,6 @@
-# argo_flutter_plugin_example
+# analysys_flutter_plugin_example
 
-Demonstrates how to use the argo_flutter_plugin plugin.
+Demonstrates how to use the analysys_flutter_plugin plugin.
 
 ## Getting Started
 

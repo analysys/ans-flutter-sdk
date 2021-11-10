@@ -20,7 +20,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 #else
     [AnalysysAgent setDebugMode:AnalysysDebugOff];
 #endif
-    [AnalysysAgent setUploadURL:@"http://192.168.220.105:8089"];
+    [AnalysysAgent setUploadURL:@"https://arkpaastest.analysys.cn:4089"];
     
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }

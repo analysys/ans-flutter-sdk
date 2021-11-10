@@ -13,7 +13,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name=".App"
-        android:label="argo_flutter_plugin_example"
+        android:label="analysys_flutter_plugin_example"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
