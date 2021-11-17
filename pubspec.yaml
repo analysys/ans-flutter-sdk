@@ -1,11 +1,11 @@
 name: analysys_flutter_plugin
 description: Argo Flutter plugin.
-version: 4.3.2
+version: 4.3.3
 homepage: https://docs.analysys.cn/
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
-  flutter: ">=2.5.0"
+  flutter: ">=1.10.0"
 
 dependencies:
   flutter:
