@@ -1,7 +1,10 @@
 package com.analysys.argo.argo_flutter_plugin;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.analysys.AnalysysAgent;
 import com.analysys.AnalysysConfig;
@@ -13,6 +16,10 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
+import io.flutter.embedding.engine.FlutterEngine;
+import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
@@ -22,30 +29,24 @@ import io.flutter.plugin.common.PluginRegistry.Registrar;
 /**
  * ArgoFlutterPlugin
  */
-public class ArgoFlutterPlugin implements MethodCallHandler {
+public class ArgoFlutterPlugin implements FlutterPlugin, MethodCallHandler,ActivityAware{
 
+    private Activity mActivity;
     private static final String TAG = "argo.analysys";
     private static final boolean DEBUG = true;
-    private final Registrar mRegistrar;
+    private MethodChannel channel;
+    private Context context;
 
     /**
      * Plugin registration.
      */
-    public static void registerWith(Registrar registrar) {
-        final MethodChannel channel = new MethodChannel(registrar.messenger(), "argo_flutter_plugin");
-        channel.setMethodCallHandler(new ArgoFlutterPlugin(registrar));
-    }
-
-    private ArgoFlutterPlugin(Registrar registrar) {
-        this.mRegistrar = registrar;
-    }
 
     @Override
-    public void onMethodCall(MethodCall call, Result result) {
+    public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
         //执行结束的返回值，供给flutter方处理，如果void 则为空
         Object callbackObject = null;
         try {
-            Context context = getActiveContext();
+
             if (context == null) {
                 Log.e(TAG, "context error!!!");
                 return;
@@ -166,6 +167,7 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
         }
         result.success(callbackObject);
     }
+
 
     private void setAutomaticCollection(Context context, Object arguments) {
         AnalysysAgent.setAutomaticCollection(context, (Boolean) arguments);
@@ -524,9 +526,6 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
         }
     }
 
-    private Context getActiveContext() {
-        return (mRegistrar.activity() != null) ? mRegistrar.activity() : mRegistrar.context();
-    }
 
     private boolean isValidateIncreMap(Object param) {
         if (!(param instanceof Map)) {
@@ -593,5 +592,41 @@ public class ArgoFlutterPlugin implements MethodCallHandler {
         }
         return param instanceof List;
     }
+
+    @Override
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+        channel = new MethodChannel(binding.getBinaryMessenger(), "argo_flutter_plugin");
+        channel.setMethodCallHandler(this);
+    }
+
+    @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        channel.setMethodCallHandler(null);
+    }
+
+
+    @Override
+    public void onAttachedToActivity(ActivityPluginBinding activityPluginBinding) {
+        mActivity = activityPluginBinding.getActivity();
+        context = mActivity;
+    }
+
+    @Override
+    public void onDetachedFromActivityForConfigChanges() {
+
+    }
+
+    @Override
+    public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+        mActivity = binding.getActivity();
+        context = mActivity;
+    }
+
+    @Override
+    public void onDetachedFromActivity() {
+        mActivity = null;
+        context = null;
+    }
+
 
 }
