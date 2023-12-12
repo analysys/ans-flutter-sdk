@@ -18,7 +18,7 @@ public class App extends FlutterApplication {
         AnalysysAgent.setDebugMode(this, 2);
         AnalysysConfig config = new AnalysysConfig();
         // 设置key(目前使用电商demo的key)
-        config.setAppKey("your_analysys_appkey");
+        config.setAppKey("3dc2312475ba8f98");
         // 设置渠道
         config.setChannel("your_channel");
         // 设置追踪新用户的首次属性
@@ -46,7 +46,7 @@ public class App extends FlutterApplication {
         // 初始化
         AnalysysAgent.init(this, config);
         // 设置数据上传/更新地址
-        AnalysysAgent.setUploadURL(this, UPLOAD_URL);
+        AnalysysAgent.setUploadURL(this, "https://uba-up.analysysdata.com");
         // 设置 WebSocket 连接 Url
         AnalysysAgent.setVisitorDebugURL(this, SOCKET_URL);
         // 设置配置下发 Url
