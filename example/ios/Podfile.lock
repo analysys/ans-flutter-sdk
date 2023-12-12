@@ -1,0 +1,40 @@
+PODS:
+  - analysys_flutter_plugin (4.3.2):
+    - AnalysysAgent (~> 4.5.15)
+    - Flutter
+  - AnalysysAgent (4.5.20.2):
+    - AnalysysAgent/Agent (= 4.5.20.2)
+    - AnalysysAgent/Encrypt (= 4.5.20.2)
+    - AnalysysAgent/Push (= 4.5.20.2)
+    - AnalysysAgent/Visual (= 4.5.20.2)
+  - AnalysysAgent/Agent (4.5.20.2)
+  - AnalysysAgent/Encrypt (4.5.20.2):
+    - AnalysysAgent/Agent
+  - AnalysysAgent/Push (4.5.20.2):
+    - AnalysysAgent/Agent
+  - AnalysysAgent/Visual (4.5.20.2):
+    - AnalysysAgent/Agent
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - analysys_flutter_plugin (from `.symlinks/plugins/analysys_flutter_plugin/ios`)
+  - Flutter (from `Flutter`)
+
+SPEC REPOS:
+  trunk:
+    - AnalysysAgent
+
+EXTERNAL SOURCES:
+  analysys_flutter_plugin:
+    :path: ".symlinks/plugins/analysys_flutter_plugin/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  analysys_flutter_plugin: 39b82e039d20fa7973311b64eaa3564d515b4c97
+  AnalysysAgent: 17f4099c1683834ed29e0de27b8174038926f18b
+  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+
+PODFILE CHECKSUM: 8e679eca47255a8ca8067c4c67aab20e64cb974d
+
+COCOAPODS: 1.11.2

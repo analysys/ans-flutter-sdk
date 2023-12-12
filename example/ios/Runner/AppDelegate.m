@@ -9,8 +9,8 @@
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [GeneratedPluginRegistrant registerWithRegistry:self];
     // Override point for customization after application launch.
-    
-    AnalysysConfig.appKey = @"heatmaptest0916";
+    NSLog(@"%@",[AnalysysAgent SDKVersion]);
+    AnalysysConfig.appKey = @"3dc2312475ba8f98";
     AnalysysConfig.channel = @"App Store";
     AnalysysConfig.encryptType = AnalysysEncryptAESCBC128;
     [AnalysysAgent startWithConfig:AnalysysConfig];
@@ -20,7 +20,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 #else
     [AnalysysAgent setDebugMode:AnalysysDebugOff];
 #endif
-    [AnalysysAgent setUploadURL:@"https://arkpaastest.analysys.cn:4089"];
+    [AnalysysAgent setUploadURL:@"https://uba-up.analysysdata.com"];
     
     return [super application:application didFinishLaunchingWithOptions:launchOptions];
 }
